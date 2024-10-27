@@ -7,18 +7,21 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController(value = "api/v1/freight")
-public class FreightController {
-
+public class VehicleOfferController {
 
     @GetMapping
-    public void getFreight() {}
+    public void getVehicleOffers() {
+    }
 
     @PostMapping
-    public void createFreight() {}
+    public void createVehicleOffer() {
+    }
 
     @PutMapping
-    public void updateFreight() {}
+    public void updateVehicleOffer() {
+    }
 
     @DeleteMapping
-    public void deleteFreight() {}
+    public void deleteVehicleOffer() {
+    }
 }
