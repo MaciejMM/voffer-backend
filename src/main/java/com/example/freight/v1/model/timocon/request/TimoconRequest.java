@@ -7,7 +7,6 @@ import java.util.List;
 
 @Data
 public class TimoconRequest {
-
     private ContactPerson contactPerson;
     private Customer customer;
     private boolean trackable;
@@ -17,5 +16,4 @@ public class TimoconRequest {
     private Double length_m;
     private List<LoadingPlaces> loadingPlaces;
     private Double weight_t;
-
 }

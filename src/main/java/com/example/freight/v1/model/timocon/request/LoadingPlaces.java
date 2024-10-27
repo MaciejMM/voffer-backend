@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class LoadingPlaces {
-
     private LoadingType loadingType;
     private LoadingAddress address;
     private String earliestLoadingDate;

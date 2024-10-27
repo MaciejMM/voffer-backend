@@ -6,7 +6,6 @@ import java.util.List;
 
 @Data
 public class TelerouteRequest {
-
     private PickUp pickUp;
     private TelerouteDelivery delivery;
     private List<PickUp> pickups;

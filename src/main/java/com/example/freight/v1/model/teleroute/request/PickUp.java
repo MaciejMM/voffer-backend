@@ -4,8 +4,6 @@ import lombok.Data;
 
 @Data
 public class PickUp {
-
     private TelerouteLocation location;
     private TelerouteInterval interval;
-
 }

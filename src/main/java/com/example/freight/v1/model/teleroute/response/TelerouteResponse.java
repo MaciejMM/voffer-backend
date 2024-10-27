@@ -6,7 +6,6 @@ import java.util.List;
 
 @Data
 public class TelerouteResponse {
-
     private TelerouteHeader header;
     private List<String> errors;
     private List<String> warnings;
