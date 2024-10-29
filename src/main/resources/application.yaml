@@ -1,5 +1,4 @@
 spring:
-  port: 8081
   config:
     import: credentials.yaml
   datasource:
@@ -14,3 +13,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+okta:
+  oauth2:
+    issuer: ${auth0.issuer}
+    audience: ${auth0.audience}
