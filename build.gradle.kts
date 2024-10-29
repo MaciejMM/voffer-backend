@@ -10,6 +10,7 @@ version = "0.0.1-SNAPSHOT"
 object Versions {
     const val JAVA_VERSION = "21"
     const val JUNIT_JUPITER = "5.10.0"
+    const val OKTA_SPRING_BOOT_STARTER = "3.0.5"
 
 }
 
@@ -31,9 +32,14 @@ repositories {
 
 dependencies {
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-data-jpa")
-//    implementation(group = "org.springframework.boot", name = "spring-boot-starter-security")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-web")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-webflux")
+    implementation(
+        group = "com.okta.spring",
+        name = "okta-spring-boot-starter",
+        version = Versions.OKTA_SPRING_BOOT_STARTER
+    )
+
 
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
