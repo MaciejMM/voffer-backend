@@ -11,6 +11,8 @@ object Versions {
     const val JAVA_VERSION = "21"
     const val JUNIT_JUPITER = "5.10.0"
     const val OKTA_SPRING_BOOT_STARTER = "3.0.5"
+    const val JAVA_JWT = "4.4.0"
+    const val AUTH0_CLIENT = "2.5.0"
 
 }
 
@@ -34,6 +36,9 @@ dependencies {
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-data-jpa")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-web")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-webflux")
+    implementation(group = "com.auth0", name = "java-jwt", version = Versions.JAVA_JWT)
+    implementation(group = "com.auth0", name = "auth0", version = Versions.AUTH0_CLIENT)
+
     implementation(
         group = "com.okta.spring",
         name = "okta-spring-boot-starter",

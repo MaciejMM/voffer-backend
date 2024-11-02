@@ -1,4 +1,4 @@
-package com.example.freight.config.auth;
+package com.example.freight.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +14,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/api/v1/**").permitAll()
-                        .requestMatchers("/api/v1/vehicle-offers/private").authenticated()
-                        .requestMatchers("/api/v1/vehicle-offers/private-scoped").hasAuthority("SCOPE_read:messages")
+                        .requestMatchers("/api/v1/**").authenticated()
                 )
                 .cors(withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2

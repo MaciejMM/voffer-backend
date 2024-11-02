@@ -1,6 +1,5 @@
 package com.example.freight.v1.vehicleOffer.controller;
 
-import com.example.freight.v1.model.Message;
 import com.example.freight.v1.vehicleOffer.service.VehicleOfferService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,17 +26,18 @@ public class VehicleOfferController {
     }
 
     @GetMapping(value = "/public")
-    public Message getVehicleOffers() {
-        return new Message("All good. You DO NOT need to be authenticated to call /api/public.");
+    public String getVehicleOffers() {
+        return "All good. You can see this because you are public.";
+
     }
 
     @PutMapping(value = "/private")
-    public Message updateVehicleOffer() {
-        return new Message("All good. You can see this because you are Authenticated.");
+    public String updateVehicleOffer() {
+        return "All good. You can see this because you are Authenticated.";
     }
 
     @DeleteMapping(value = "/private-scoped")
-    public Message deleteVehicleOffer() {
-        return new Message("All good. You can see this because you are Authenticated with a Token granted the 'read:messages' scope");
+    public String deleteVehicleOffer() {
+        return "All good. You can see this because you are Authenticated with a Token granted the 'read:messages' scope";
     }
 }

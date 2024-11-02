@@ -2,9 +2,12 @@ package com.example.freight.v1.admin.entity;
 
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+
 
 @Data
 @Entity
@@ -12,7 +15,8 @@ import lombok.Data;
 public class UserLanguage {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Long userLanguageId;
     private String roleName;
 }
