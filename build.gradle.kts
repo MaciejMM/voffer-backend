@@ -70,7 +70,7 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 tasks.withType<JavaCompile> {
-    options.forkOptions.memoryMaximumSize = "512m"
+    options.forkOptions.memoryMaximumSize = "256m"
 }
 
 tasks.withType<JavaExec> {
