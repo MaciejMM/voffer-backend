@@ -1,7 +1,12 @@
+
 plugins {
     java
     id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
+}
+
+tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    mainClass.set("com.example.freight.FreightApplication")
 }
 
 group = "com.example"
@@ -20,6 +25,8 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(Versions.JAVA_VERSION)
     }
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 configurations {
