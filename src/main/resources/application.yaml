@@ -1,6 +1,6 @@
 spring:
   config:
-    import: credentials.yaml
+    import: optional:credentials.yaml
   datasource:
     url: jdbc:postgresql://localhost:5433/freight
     username: ${database.local.username}
