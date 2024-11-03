@@ -40,7 +40,7 @@ repositories {
 }
 
 dependencies {
-    implementation(group = "org.springframework.boot", name = "spring-boot-starter-data-jpa")
+//    implementation(group = "org.springframework.boot", name = "spring-boot-starter-data-jpa")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-web")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-webflux")
     implementation(group = "com.auth0", name = "java-jwt", version = Versions.JAVA_JWT)
