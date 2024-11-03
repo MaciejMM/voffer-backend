@@ -69,3 +69,10 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+tasks.withType<JavaCompile> {
+    options.forkOptions.memoryMaximumSize = "512m"
+}
+
+tasks.withType<JavaExec> {
+    jvmArgs = listOf("-Xmx512m")
+}
