@@ -1,0 +1,28 @@
+# IDE
+.idea
+.project
+.classpath
+.settings
+target
+bin
+out
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Maven wrapper
+mvnw
+mvnw.cmd
+.mvn
+
+# Git
+.git
+.gitignore
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Environment-specific configurations
+credentials.yaml

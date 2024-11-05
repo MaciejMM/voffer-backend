@@ -28,10 +28,9 @@ public class VehicleOfferController {
     @GetMapping(value = "/public")
     public String getVehicleOffers() {
         return "All good. You can see this because you are public.";
-
     }
 
-    @PutMapping(value = "/private")
+    @PutMapping(value = "")
     public String updateVehicleOffer() {
         return "All good. You can see this because you are Authenticated.";
     }
