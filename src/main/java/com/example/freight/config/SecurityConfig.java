@@ -16,6 +16,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/health-check").permitAll()
                         .requestMatchers("/api/v1/**").authenticated()
+                        .requestMatchers( "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 )
                 .cors(withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2

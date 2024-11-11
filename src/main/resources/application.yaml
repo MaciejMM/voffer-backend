@@ -3,12 +3,12 @@ spring:
     import: optional:credentials.yaml
   datasource:
     url: jdbc:postgresql://localhost:5433/freight
-    username: ${database.local.username}
-    password: ${database.local.password}
+    username: ${database.username}
+    password: ${database.password}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
@@ -17,3 +17,9 @@ okta:
   oauth2:
     issuer: ${auth0.issuer}
     audience: ${auth0.audience}
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n"
+springdoc:
+  swagger-ui:
+    path: "/swagger-ui.html"

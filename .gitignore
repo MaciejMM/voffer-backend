@@ -5,6 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 credentials.yaml
+logs/
 
 ### STS ###
 .apt_generated
