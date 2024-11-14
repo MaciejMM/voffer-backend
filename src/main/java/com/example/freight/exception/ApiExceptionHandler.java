@@ -26,11 +26,17 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = {AuthorizationException.class})
     public ResponseEntity<Object> handleAuthorizationException(final AuthorizationException apiRequestException) {
-        HttpStatus badRequestStatus = HttpStatus.NOT_ACCEPTABLE;
-        ApiException apiException = createApiException(apiRequestException, badRequestStatus);
-        return new ResponseEntity<>(apiException, badRequestStatus);
+        HttpStatus unauthorizedStatus = HttpStatus.UNAUTHORIZED;
+        ApiException apiException = createApiException(apiRequestException, unauthorizedStatus);
+        return new ResponseEntity<>(apiException, unauthorizedStatus);
     }
 
+    @ExceptionHandler(value = {UserNotFoundException.class})
+    public ResponseEntity<Object> handleUserNotFoundException(final UserNotFoundException userNotFoundException) {
+        HttpStatus notFoundStatus = HttpStatus.NOT_FOUND;
+        ApiException apiException = createApiException(userNotFoundException, notFoundStatus);
+        return new ResponseEntity<>(apiException, notFoundStatus);
+    }
 
     private ApiException createApiException(final Exception exception, final HttpStatus status) {
         LOGGER.error(exception.getMessage(), exception);

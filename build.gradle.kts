@@ -44,10 +44,10 @@ dependencies {
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-data-jpa")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-web")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-webflux")
-    implementation(group = "com.auth0", name = "java-jwt", version = Versions.JAVA_JWT)
-    implementation(group = "com.auth0", name = "auth0", version = Versions.AUTH0_CLIENT)
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-logging")
     implementation(group = "ch.qos.logback", name = "logback-classic")
+    implementation(group = "com.auth0", name = "java-jwt", version = Versions.JAVA_JWT)
+    implementation(group = "com.auth0", name = "auth0", version = Versions.AUTH0_CLIENT)
     implementation(
         group = "com.okta.spring",
         name = "okta-spring-boot-starter",
@@ -77,10 +77,10 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-//tasks.withType<JavaCompile> {
-//    options.forkOptions.memoryMaximumSize = "256m"
-//}
-//
-//tasks.withType<JavaExec> {
-//    jvmArgs = listOf("-Xmx512m")
-//}
+tasks.withType<JavaCompile> {
+    options.forkOptions.memoryMaximumSize = "512m"
+}
+
+tasks.withType<JavaExec> {
+    jvmArgs = listOf("-Xmx512m")
+}

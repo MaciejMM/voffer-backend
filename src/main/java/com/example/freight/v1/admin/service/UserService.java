@@ -1,6 +1,7 @@
 package com.example.freight.v1.admin.service;
 
 import com.example.freight.exception.ApiRequestException;
+import com.example.freight.exception.UserNotFoundException;
 import com.example.freight.v1.admin.model.request.UserRequest;
 import com.example.freight.v1.admin.model.entity.User;
 import com.example.freight.v1.admin.model.request.UserUpdateRequest;
@@ -73,7 +74,7 @@ public class UserService {
         try {
             userRepository.deleteById(userId);
         } catch (ConstraintViolationException e) {
-            throw new ApiRequestException("Unauthorized operation", e);
+            throw new UserNotFoundException("User deletion failed", e);
         }
     }
 
