@@ -1,20 +1,25 @@
 package com.example.freight.v1.admin.service;
 
-import com.example.freight.v1.admin.model.entity.User;
-import com.example.freight.v1.admin.model.request.UserRequest;
-import com.example.freight.v1.admin.repository.UserRepository;
+import com.example.freight.exception.ApiRequestException;
+import com.example.freight.auth.models.entity.User;
+import com.example.freight.auth.models.request.UserRequest;
+import com.example.freight.v1.admin.UserService;
+import com.example.freight.v1.admin.UserUpdateRequest;
+import com.example.freight.auth.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class UserServiceTest {
@@ -35,7 +40,7 @@ class UserServiceTest {
                 .title("Mr.")
                 .createdAt(LocalDateTime.now())
                 .build();
-        UserRequest userRequest =  UserRequest.builder()
+        UserRequest userRequest = UserRequest.builder()
                 .email("simple@email.com")
                 .firstName("John")
                 .lastName("Doe")
@@ -69,6 +74,65 @@ class UserServiceTest {
 
     @Test
     void shouldUpdateUser() {
+        // given
+        Long userId = 1L;
+        User user = User.builder()
+                .id(userId)
+                .email("test@user.com")
+                .firstName("John")
+                .lastName("Doe")
+                .title("Mr.")
+                .createdAt(LocalDateTime.now())
+                .build();
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("Jane", "Smith", "Ms.");
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        // when
+        userService.updateUser(userId, userUpdateRequest);
+
+        // then
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(userArgumentCaptor.capture());
+        User updatedUser = userArgumentCaptor.getValue();
+
+        assertEquals("Jane", updatedUser.getFirstName());
+        assertEquals("Smith", updatedUser.getLastName());
+        assertEquals("Ms.", updatedUser.getTitle());
+        assertNotNull(updatedUser.getUpdatedAt());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUserNotFound() {
+        // given
+        Long userId = 1L;
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("Jane", "Smith", "Ms.");
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(ApiRequestException.class, () -> userService.updateUser(userId, userUpdateRequest));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenDataIntegrityViolationOccurs() {
+        // given
+        Long userId = 1L;
+        User user = User.builder()
+                .id(userId)
+                .email("test@user.com")
+                .firstName("John")
+                .lastName("Doe")
+                .title("Mr.")
+                .createdAt(LocalDateTime.now())
+                .build();
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("Jane", "Smith", "Ms.");
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        doThrow(DataIntegrityViolationException.class).when(userRepository).save(any(User.class));
+
+        // when & then
+        assertThrows(ApiRequestException.class, () -> userService.updateUser(userId, userUpdateRequest));
     }
 
     @Test

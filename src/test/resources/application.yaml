@@ -26,3 +26,7 @@ okta:
   oauth2:
     issuer: https://testing-issuer.com/
     audience: https://testing-audience.com/
+teleroute:
+  username: teleroute_user
+  password: teleroute_password
+  url: https://api.test.teleoroute.com

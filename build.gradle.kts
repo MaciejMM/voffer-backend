@@ -3,6 +3,7 @@ plugins {
     id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
     id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.9"
+    kotlin("jvm")
 
 }
 
@@ -46,13 +47,12 @@ dependencies {
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-webflux")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-logging")
     implementation(group = "ch.qos.logback", name = "logback-classic")
-    implementation(group = "com.auth0", name = "java-jwt", version = Versions.JAVA_JWT)
-    implementation(group = "com.auth0", name = "auth0", version = Versions.AUTH0_CLIENT)
-    implementation(
-        group = "com.okta.spring",
-        name = "okta-spring-boot-starter",
-        version = Versions.OKTA_SPRING_BOOT_STARTER
-    )
+    implementation(group = "io.jsonwebtoken", name = "jjwt-api", version = "0.11.5")
+    implementation(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.5")
+    implementation(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.5")
+    implementation(group = "org.springframework.boot", name = "spring-boot-starter-security")
+    implementation(group = "com.google.code.gson", name = "gson", version = "2.11.0")
+
     implementation(
         group = "org.springdoc",
         name = "springdoc-openapi-starter-webmvc-ui",
@@ -71,6 +71,7 @@ dependencies {
     testImplementation(group = "io.projectreactor", name = "reactor-test")
     testImplementation(group = "org.junit.platform", name = "junit-platform-launcher")
     testImplementation(group = "com.h2database", name = "h2")
+    implementation(kotlin("stdlib-jdk8"))
 
 }
 
@@ -78,9 +79,17 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 tasks.withType<JavaCompile> {
-    options.forkOptions.memoryMaximumSize = "512m"
+    if (project.hasProperty("spring.profiles.active") &&
+        (project.property("spring.profiles.active") == "prod" || project.property("spring.profiles.active") == "test")
+    ) {
+        options.forkOptions.memoryMaximumSize = "512m"
+    }
 }
 
 tasks.withType<JavaExec> {
-    jvmArgs = listOf("-Xmx512m")
+    if (project.hasProperty("spring.profiles.active") &&
+        (project.property("spring.profiles.active") == "prod" || project.property("spring.profiles.active") == "test")
+    ) {
+        jvmArgs = listOf("-Xmx512m")
+    }
 }

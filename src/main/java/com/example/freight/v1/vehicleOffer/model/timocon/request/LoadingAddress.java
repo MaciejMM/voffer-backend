@@ -7,6 +7,6 @@ import lombok.Data;
 public class LoadingAddress {
     private String objectType;
     private String city;
-    private String country;
+    private TimoconCountry timoconCountry;
     private String postalCode;
 }

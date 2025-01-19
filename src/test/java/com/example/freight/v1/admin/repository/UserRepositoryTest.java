@@ -1,6 +1,7 @@
 package com.example.freight.v1.admin.repository;
 
-import com.example.freight.v1.admin.model.entity.User;
+import com.example.freight.auth.UserRepository;
+import com.example.freight.auth.models.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ class UserRepositoryTest {
         // given
         List<User> users = List.of(
                 User.builder().firstName("John").lastName("Doe").build(),
-                User.builder().firstName("Jane").lastName("Doe").build());
+                User.builder().firstName("Jane").lastName("Zoe").build());
 
         // when
         userRepository.saveAll(users);
@@ -58,7 +59,7 @@ class UserRepositoryTest {
         assertThat(foundUsers).isNotNull();
         assertThat(foundUsers).hasSize(2);
         assertThat(foundUsers).extracting("firstName").contains("John", "Jane");
-        assertThat(foundUsers).extracting("lastName").contains("Doe");
+        assertThat(foundUsers).extracting("lastName").contains("Doe","Zoe");
     }
 
     @Test

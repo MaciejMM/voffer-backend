@@ -13,13 +13,21 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-okta:
-  oauth2:
-    issuer: ${auth0.issuer}
-    audience: ${auth0.audience}
+
+security:
+  jwt:
+    secret: ${jwt.secret}
+    expirationTime: ${jwt.expirationTime}
+    issuer: http://localhost:8080
+    audience: http://localhost:4200
+
 logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n"
 springdoc:
   swagger-ui:
     path: "/swagger-ui.html"
+teleroute:
+  username: ${teleroute.username}
+  password: ${teleroute.password}
+  url: https://api.fx.demo.wktransportservices.com

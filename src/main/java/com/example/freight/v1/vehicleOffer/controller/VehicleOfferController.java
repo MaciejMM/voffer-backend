@@ -1,13 +1,14 @@
 package com.example.freight.v1.vehicleOffer.controller;
 
+import com.example.freight.v1.vehicleOffer.model.entity.Offer;
+import com.example.freight.v1.vehicleOffer.model.offer.VehicleOfferRequest;
 import com.example.freight.v1.vehicleOffer.service.VehicleOfferService;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -21,22 +22,24 @@ public class VehicleOfferController {
     }
 
     @PostMapping
-    public void createVehicleOffer() {
-        vehicleOfferService.createVehicleOffer();
+    public ResponseEntity<Map<String, String>> createVehicleOffer(final @RequestBody VehicleOfferRequest vehicleOfferRequest) {
+        vehicleOfferService.createVehicleOffer(vehicleOfferRequest);
+        return ResponseEntity.ok().body(Map.of("Message", "Offer created successfully"));
     }
 
-    @GetMapping(value = "/public")
-    public String getVehicleOffers() {
-        return "All good. You can see this because you are public.";
+    @GetMapping
+    public List<Offer> getVehicleOffers() {
+        return vehicleOfferService.getOffers();
     }
 
-    @PutMapping(value = "")
-    public String updateVehicleOffer() {
+    @PutMapping(value = "/{id}")
+    public String updateVehicleOffer(final @PathVariable String id) {
         return "All good. You can see this because you are Authenticated.";
     }
 
-    @DeleteMapping(value = "/private-scoped")
-    public String deleteVehicleOffer() {
-        return "All good. You can see this because you are Authenticated with a Token granted the 'read:messages' scope";
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Map<String, String>> deleteVehicleOffer(final @PathVariable String id) {
+        vehicleOfferService.deleteOffer(id);
+        return ResponseEntity.ok().body(Map.of("Message", "Offer deleted successfully"));
     }
 }

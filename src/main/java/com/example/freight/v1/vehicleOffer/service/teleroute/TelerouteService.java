@@ -1,0 +1,84 @@
+package com.example.freight.v1.vehicleOffer.service.teleroute;
+
+import com.example.freight.utlis.JsonUtil;
+import com.example.freight.v1.vehicleOffer.model.teleroute.auth.TokenResponse;
+import com.example.freight.v1.vehicleOffer.model.teleroute.request.TelerouteRequest;
+import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteContent;
+import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteResponse;
+import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteResponseDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+@Service
+public class TelerouteService {
+
+    private static final String CONTENT_TYPE = "application/json";
+    private static final Logger LOGGER = LoggerFactory.getLogger(TelerouteService.class);
+
+    @Value("${teleroute.url}")
+    private String telerouteUrl;
+
+    private final WebClient webClient;
+    private final TelerouteTokenService telerouteTokenService;
+
+    public TelerouteService(final WebClient webClient, final TelerouteTokenService telerouteTokenService) {
+        this.webClient = webClient;
+        this.telerouteTokenService = telerouteTokenService;
+    }
+
+    public TelerouteResponseDto createOffer(final TelerouteRequest telerouteRequest) {
+        try {
+            TokenResponse accessToken = telerouteTokenService.getAccessToken();
+            LOGGER.info(telerouteRequest.toString());
+
+            final String telerouteResponse = sendRequest(telerouteRequest, accessToken);
+            final TelerouteResponse telerouteResponse1 = parseResponse(telerouteResponse);
+
+            return buildResponseDto(telerouteResponse1, null);
+        } catch (Exception e) {
+            LOGGER.error("Error creating offer: ", e);
+            return buildResponseDto(null, e.getMessage());
+        }
+    }
+
+    private String sendRequest(final TelerouteRequest telerouteRequest, final TokenResponse accessToken) {
+        return webClient.post()
+                .uri(String.format("%s/vehicle/offers", telerouteUrl))
+                .header("Authorization", "Bearer " + accessToken.access_token())
+                .header("Content-Type", CONTENT_TYPE)
+                .header("Accept-Version", "v2")
+                .bodyValue(telerouteRequest)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
+
+    private TelerouteResponse parseResponse(final String telerouteResponse) {
+        return JsonUtil.fromJson(telerouteResponse, TelerouteResponse.class);
+    }
+
+    private TelerouteResponseDto buildResponseDto(final TelerouteResponse telerouteResponse, String errorMessage) {
+        final String offerId = Optional.ofNullable(telerouteResponse)
+                .map(TelerouteResponse::content)
+                .map(TelerouteContent::getOfferId)
+                .orElse(null);
+        final String externalId = Optional.ofNullable(telerouteResponse)
+                .map(TelerouteResponse::content)
+                .map(TelerouteContent::getExternalId)
+                .orElse(null);
+
+        return TelerouteResponseDto.builder()
+                .offerId(offerId)
+                .externalId(externalId)
+                .errorMessage(errorMessage)
+                .publishDateTime(LocalDateTime.now().toString())
+                .build();
+    }
+
+}

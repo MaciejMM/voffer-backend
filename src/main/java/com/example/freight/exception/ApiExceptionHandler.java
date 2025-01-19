@@ -38,6 +38,28 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(apiException, notFoundStatus);
     }
 
+    @ExceptionHandler(value = {NotFoundException.class})
+    public ResponseEntity<Object> handleNotFoundException(final NotFoundException notFoundException) {
+        HttpStatus notFoundStatus = HttpStatus.NOT_FOUND;
+        ApiException apiException = createApiException(notFoundException, notFoundStatus);
+        return new ResponseEntity<>(apiException, notFoundStatus);
+    }
+
+    @ExceptionHandler(value = {ServerResponseException.class})
+    public ResponseEntity<Object> handleServerResponseException(final ServerResponseException serverResponseException) {
+        HttpStatus notFoundStatus = HttpStatus.BAD_GATEWAY;
+
+        ApiException apiException = createApiException(serverResponseException, notFoundStatus);
+        return new ResponseEntity<>(apiException, notFoundStatus);
+    }
+
+    @ExceptionHandler(value = {RoleNotAllowedException.class})
+    public ResponseEntity<Object> handleRoleNotAllowedException(final RoleNotAllowedException roleNotAllowedException) {
+        HttpStatus forbiddenStatus = HttpStatus.FORBIDDEN;
+        ApiException apiException = createApiException(roleNotAllowedException, forbiddenStatus);
+        return new ResponseEntity<>(apiException, forbiddenStatus);
+    }
+
     private ApiException createApiException(final Exception exception, final HttpStatus status) {
         LOGGER.error(exception.getMessage(), exception);
         return new ApiException(

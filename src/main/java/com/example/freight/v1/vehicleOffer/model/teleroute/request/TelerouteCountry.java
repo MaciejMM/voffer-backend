@@ -1,0 +1,63 @@
+package com.example.freight.v1.vehicleOffer.model.teleroute.request;
+
+import lombok.Getter;
+
+import java.util.Arrays;
+
+@Getter
+public enum TelerouteCountry {
+    AD,
+    AL,
+    AT,
+    BA,
+    BE,
+    BG,
+    BY,
+    CH,
+    CY,
+    CZ,
+    DE,
+    DK,
+    EE,
+    ES,
+    FI,
+    FR,
+    GB,
+    GI,
+    GR,
+    HR,
+    HU,
+    IE,
+    IS,
+    IT,
+    LI,
+    LT,
+    LU,
+    LV,
+    MC,
+    MD,
+    ME,
+    MK,
+    MT,
+    NL,
+    NO,
+    PL,
+    PT,
+    RO,
+    RS,
+    RU,
+    SE,
+    SI,
+    SK,
+    SM,
+    TR,
+    UA;
+
+    public static String findCountry(String country) {
+        return Arrays.stream(TelerouteCountry.values())
+                .filter(c -> c.name().equalsIgnoreCase(country))
+                .findFirst()
+                .map(Enum::toString)
+                .orElse(null);
+    }
+}
