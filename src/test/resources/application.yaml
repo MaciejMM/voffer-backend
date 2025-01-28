@@ -11,22 +11,20 @@ spring:
   h2:
     console:
       enabled: true
-auth0:
-  client_id: testing_client_id
-  client_secret: testing_client_secret
-  audience: https://testing-audience.com/
-  grant_type: client_credentials
-  issuer: https://testing-issuer.com/
+security:
+  jwt:
+    secret: JWT_secret_key
+    expirationTime: 86400000
+    issuer: http://issuer.com
+    audience: http://audience.com
 
-jwt:
-  secret: testing_secret
-  expirationTime: 86400000
-
-okta:
-  oauth2:
-    issuer: https://testing-issuer.com/
-    audience: https://testing-audience.com/
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n"
+springdoc:
+  swagger-ui:
+    path: "/swagger-ui.html"
 teleroute:
-  username: teleroute_user
-  password: teleroute_password
-  url: https://api.test.teleoroute.com
+  username: teleroute_username
+  password: telroute_password
+  url: https://api.fake.com

@@ -70,6 +70,7 @@ public class UserService {
                 .role(optionalRole.get())
                 .active(true)
                 .password(passwordEncoder.encode(userRequest.password()))
+                .createdAt(LocalDateTime.now())
                 .build();
 
         try {

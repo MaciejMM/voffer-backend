@@ -55,7 +55,7 @@ public class TelerouteRequestMapper {
                 .location(
                         mapUnloadingLocation(unloadingPlace)
                 )
-                .interval(mapInterval(unloadingPlace.unloadingDateAndTime(), unloadingPlace.unloadingDateAndTime()))
+                .interval(mapInterval(unloadingPlace.unloadingStartDateAndTime(), unloadingPlace.unloadingEndDateAndTime()))
                 .build();
     }
 

@@ -78,18 +78,18 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-tasks.withType<JavaCompile> {
-    if (project.hasProperty("spring.profiles.active") &&
-        (project.property("spring.profiles.active") == "prod" || project.property("spring.profiles.active") == "test")
-    ) {
-        options.forkOptions.memoryMaximumSize = "512m"
-    }
-}
-
-tasks.withType<JavaExec> {
-    if (project.hasProperty("spring.profiles.active") &&
-        (project.property("spring.profiles.active") == "prod" || project.property("spring.profiles.active") == "test")
-    ) {
-        jvmArgs = listOf("-Xmx512m")
-    }
-}
+//tasks.withType<JavaCompile> {
+//    if (project.hasProperty("spring.profiles.active") &&
+//        (project.property("spring.profiles.active") == "prod" || project.property("spring.profiles.active") == "test")
+//    ) {
+//        options.forkOptions.memoryMaximumSize = "512m"
+//    }
+//}
+//
+//tasks.withType<JavaExec> {
+//    if (project.hasProperty("spring.profiles.active") &&
+//        (project.property("spring.profiles.active") == "prod" || project.property("spring.profiles.active") == "test")
+//    ) {
+//        jvmArgs = listOf("-Xmx512m")
+//    }
+//}

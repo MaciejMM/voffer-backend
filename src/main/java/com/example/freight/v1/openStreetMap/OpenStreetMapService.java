@@ -1,9 +1,11 @@
 package com.example.freight.v1.openStreetMap;
 
 import com.example.freight.utlis.JsonUtil;
+import com.example.freight.v1.vehicleOffer.model.teleroute.request.TelerouteCountry;
 import com.google.gson.reflect.TypeToken;
 import lombok.Builder;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -30,7 +32,7 @@ public class OpenStreetMapService {
                         .path("search")
                         .queryParam("q", query)
                         .queryParam("format", "json")
-                        .queryParam("countrycodes","pl,es,uk,fr,de")
+                        .queryParam("countrycodes", getTelerouteCountries())
                         .queryParam("addressdetails", "1")
                         .build())
                 .header("User-Agent", "YourAppName/1.0")
@@ -67,6 +69,10 @@ public class OpenStreetMapService {
                         }
                 )
                 .collect(Collectors.toList());
+    }
+
+    private String getTelerouteCountries() {
+        return StringUtils.join(",", TelerouteCountry.getCountryCodes().stream().map(String::toUpperCase).collect(Collectors.toList()));
     }
 
     @Data

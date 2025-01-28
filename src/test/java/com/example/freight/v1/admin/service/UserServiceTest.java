@@ -1,25 +1,33 @@
 package com.example.freight.v1.admin.service;
 
-import com.example.freight.exception.ApiRequestException;
+import com.example.freight.auth.RoleRepository;
+import com.example.freight.auth.UserRepository;
+import com.example.freight.auth.models.entity.ERole;
+import com.example.freight.auth.models.entity.Role;
 import com.example.freight.auth.models.entity.User;
 import com.example.freight.auth.models.request.UserRequest;
+import com.example.freight.exception.ApiRequestException;
 import com.example.freight.v1.admin.UserService;
 import com.example.freight.v1.admin.UserUpdateRequest;
-import com.example.freight.auth.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class UserServiceTest {
@@ -30,25 +38,39 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private RoleRepository roleRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @Test
     void shouldCreateUser() {
         // given
+        Role role = Role.builder().name(ERole.USER).createdAt(LocalDateTime.now()).description("test description").build();
+
         User user = User.builder()
                 .email("simple@email.com")
                 .firstName("John")
                 .lastName("Doe")
                 .title("Mr.")
+                .role(role)
                 .createdAt(LocalDateTime.now())
                 .build();
         UserRequest userRequest = UserRequest.builder()
                 .email("simple@email.com")
                 .firstName("John")
                 .lastName("Doe")
+                .password("password")
+                .role(ERole.USER)
                 .title("Mr.")
-                .createdAt(LocalDateTime.now())
                 .build();
 
         // when
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+        when(roleRepository.findByName(ERole.USER)).thenReturn(Optional.of(role));
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(passwordEncoder.encode(any())).thenReturn("password");
         userService.createUser(userRequest);
 
         // then
@@ -84,7 +106,8 @@ class UserServiceTest {
                 .title("Mr.")
                 .createdAt(LocalDateTime.now())
                 .build();
-        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("Jane", "Smith", "Ms.");
+        Role role = Role.builder().name(ERole.USER).updatedAt(LocalDateTime.now()).description("Role desciption").id(1).build();
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("Jane", "Smith", "Ms.", role, true);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
@@ -106,7 +129,8 @@ class UserServiceTest {
     void shouldThrowExceptionWhenUserNotFound() {
         // given
         Long userId = 1L;
-        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("Jane", "Smith", "Ms.");
+        Role role = Role.builder().name(ERole.USER).updatedAt(LocalDateTime.now()).description("Role desciption").id(1).build();
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("Jane", "Smith", "Ms.", role, true);
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
@@ -126,7 +150,8 @@ class UserServiceTest {
                 .title("Mr.")
                 .createdAt(LocalDateTime.now())
                 .build();
-        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("Jane", "Smith", "Ms.");
+        Role role = Role.builder().name(ERole.USER).updatedAt(LocalDateTime.now()).description("Role desciption").id(1).build();
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("Jane", "Smith", "Ms.", role, true);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         doThrow(DataIntegrityViolationException.class).when(userRepository).save(any(User.class));

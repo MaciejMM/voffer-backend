@@ -1,5 +1,6 @@
 package com.example.freight.auth;
 
+import com.example.freight.exception.CustomErrorHandler;
 import com.example.freight.exception.UserNotFoundException;
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
@@ -9,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,18 +21,17 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final HandlerExceptionResolver handlerExceptionResolver;
-
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final CustomErrorHandler customErrorHandler;
 
     public JwtAuthenticationFilter(
-            JwtService jwtService,
-            HandlerExceptionResolver handlerExceptionResolver, UserRepository userRepository
-    ) {
+            final JwtService jwtService,
+            final UserRepository userRepository,
+            final CustomErrorHandler customErrorHandler) {
         this.jwtService = jwtService;
-        this.handlerExceptionResolver = handlerExceptionResolver;
         this.userRepository = userRepository;
+        this.customErrorHandler = customErrorHandler;
     }
 
 
@@ -71,7 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (Exception exception) {
-            handlerExceptionResolver.resolveException(request, response, null, exception);
+            customErrorHandler.resolveException(request, response, null, exception);
         }
-    } 
+    }
 }

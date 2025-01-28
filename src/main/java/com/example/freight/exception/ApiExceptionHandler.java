@@ -60,6 +60,13 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(apiException, forbiddenStatus);
     }
 
+    @ExceptionHandler(value = {ExpiredJwtException.class})
+    public ResponseEntity<Object> handleCustomExpiredJwtException(final ExpiredJwtException exception) {
+        HttpStatus unauthorizedStatus = HttpStatus.UNAUTHORIZED;
+        ApiException apiException = createApiException(exception, unauthorizedStatus);
+        return new ResponseEntity<>(apiException, unauthorizedStatus);
+    }
+
     private ApiException createApiException(final Exception exception, final HttpStatus status) {
         LOGGER.error(exception.getMessage(), exception);
         return new ApiException(
@@ -68,4 +75,5 @@ public class ApiExceptionHandler {
                 ZonedDateTime.now(ZoneId.of(ZONE_ID))
         );
     }
+
 }

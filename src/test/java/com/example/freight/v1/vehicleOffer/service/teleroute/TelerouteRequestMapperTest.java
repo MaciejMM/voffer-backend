@@ -34,7 +34,15 @@ public class TelerouteRequestMapperTest {
                         new VehicleOfferRequest.LoadingPlace("PL", "89-000", "Wroclaw",
                                 LocalDateTime.of(2025, 5, 11, 13, 0),
                                 LocalDateTime.of(2025, 5, 11, 15, 0)))
-                .unloadingPlace(new VehicleOfferRequest.UnloadingPlace("PL", "54-000", "Szczecin", LocalDateTime.of(2025, 5, 13, 14, 0)))
+                .unloadingPlace(
+                        VehicleOfferRequest.UnloadingPlace.builder()
+                                .country("PL")
+                                .city("Szczecin")
+                                .postalCode("54-000")
+                                .unloadingEndDateAndTime(LocalDateTime.of(2025, 5, 13, 14, 0))
+                                .unloadingStartDateAndTime(LocalDateTime.of(2025, 5, 13, 14, 0))
+                                .city("TestCity")
+                                .build())
                 .description("test description")
                 .loadingType(LoadingType.FTL)
                 .loadingWeight("24.0")
@@ -42,13 +50,6 @@ public class TelerouteRequestMapperTest {
                 .loadingVolume(null)
                 .loadingBodyType("Tautliner")
                 .publishSelected(null)
-                .contactDetails(VehicleOfferRequest.ContactDetails.builder()
-                        .email("email@em.com")
-                        .firstName("Jan")
-                        .lastName("Kowalski")
-                        .title("Mr")
-                        .languages(List.of("PL", "EN"))
-                        .build())
                 .build();
 
         //when
@@ -59,7 +60,7 @@ public class TelerouteRequestMapperTest {
         assertEquals("89-000", map.getDeparture().getLocation().getAddress().getZip());
         assertEquals("Wroclaw", map.getDeparture().getLocation().getAddress().getCity());
         assertEquals("54-000", map.getArrival().getLocation().getAddress().getZip());
-        assertEquals("Szczecin", map.getArrival().getLocation().getAddress().getCity());
+        assertEquals("TestCity", map.getArrival().getLocation().getAddress().getCity());
         assertEquals("PL", map.getArrival().getLocation().getAddress().getCountry());
         assertEquals("teleroute_user", map.getOwner().getLogin());
         assertEquals("2025-05-11T13:00:00", map.getDeparture().getInterval().getStart());
@@ -85,11 +86,13 @@ public class TelerouteRequestMapperTest {
                         .country("PL")
                         .city("Szczecin")
                         .postalCode("54-000")
-                        .unloadingDateAndTime(LocalDateTime.of(2025, 5, 13, 14, 0))
+                        .unloadingStartDateAndTime(LocalDateTime.of(2025, 5, 13, 14, 0))
+                        .unloadingEndDateAndTime(LocalDateTime.of(2025, 5, 13, 14, 0))
                         .build())
                 .loadingWeight(null)
                 .loadingLength(null)
                 .loadingVolume(null)
+                .description(null)
                 .loadingBodyType("Tautliner")
                 .build();
         //when

@@ -63,4 +63,10 @@ public class Offer {
     @Column(name = "loading_body_type")
     private String loadingBodyType;
 
+    @Column
+    private String goodsType;
+
+    @Column
+    private String publishSelected;
+
 }

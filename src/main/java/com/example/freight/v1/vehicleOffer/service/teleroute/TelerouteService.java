@@ -9,6 +9,7 @@ import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteRes
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -46,6 +47,42 @@ public class TelerouteService {
             return buildResponseDto(null, e.getMessage());
         }
     }
+
+    public TelerouteResponse getOffer(final String offerId) {
+        TokenResponse accessToken = telerouteTokenService.getAccessToken();
+        return webClient.get()
+                .uri(String.format("%s/vehicle/offers/%s", telerouteUrl,offerId))
+                .header("Authorization", "Bearer " + accessToken.access_token())
+                .header("Content-Type", CONTENT_TYPE)
+                .header("Accept-Version", "v2")
+                .retrieve()
+                .onStatus(HttpStatusCode::is5xxServerError,
+                        clientResponse -> clientResponse.bodyToMono(String.class)
+                                .map(body -> new RuntimeException("Error retrieving offer: " + body)))
+                .bodyToMono(TelerouteResponse.class)
+                .block();
+    }
+
+    public void deleteOffer(final String offerId) {
+        try {
+            TokenResponse accessToken = telerouteTokenService.getAccessToken();
+            webClient.delete()
+                    .uri(String.format("%s/vehicle/offers/%s", telerouteUrl, offerId))
+                    .header("Authorization", "Bearer " + accessToken.access_token())
+                    .header("Content-Type", CONTENT_TYPE)
+                    .header("Accept-Version", "v2")
+                    .retrieve()
+                    .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
+                            clientResponse -> clientResponse.bodyToMono(String.class)
+                                    .map(body -> new RuntimeException("Error deleting offer: " + body)))
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (Exception e) {
+            LOGGER.error("Error deleting offer: ", e);
+        }
+    }
+
+
 
     private String sendRequest(final TelerouteRequest telerouteRequest, final TokenResponse accessToken) {
         return webClient.post()

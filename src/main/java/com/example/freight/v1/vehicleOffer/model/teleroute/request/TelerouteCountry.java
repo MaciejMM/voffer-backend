@@ -3,6 +3,8 @@ package com.example.freight.v1.vehicleOffer.model.teleroute.request;
 import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public enum TelerouteCountry {
@@ -59,5 +61,11 @@ public enum TelerouteCountry {
                 .findFirst()
                 .map(Enum::toString)
                 .orElse(null);
+    }
+
+    public static List<String> getCountryCodes() {
+        return Arrays.stream(TelerouteCountry.values())
+                .map(Enum::toString)
+                .collect(Collectors.toList());
     }
 }

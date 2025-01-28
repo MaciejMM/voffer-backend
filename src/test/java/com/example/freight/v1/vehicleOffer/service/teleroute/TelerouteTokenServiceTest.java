@@ -41,12 +41,13 @@ public class TelerouteTokenServiceTest {
 
     @Test
     void shouldReturnAccessToken() {
-        String expectedToken = "test-token";
+        TokenResponse expectedToken =new TokenResponse("acces__token", "bearer", 3600, "scope","refreshToken");
+
         when(webClient.post()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri(any(String.class))).thenReturn(requestBodySpec);
         when(requestBodySpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.onStatus(any(), any())).thenReturn(responseSpec);
-        when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(expectedToken));
+        when(responseSpec.bodyToMono(TokenResponse.class)).thenReturn(Mono.just(expectedToken));
 
         TokenResponse actualToken = telerouteTokenService.getAccessToken();
 
