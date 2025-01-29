@@ -11,6 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -50,6 +51,7 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
                 .build();
 
         Optional<Role> optionalRole = roleRepository.findByName(ERole.SUPER_ADMIN);
+        Optional<Role> adminRole = roleRepository.findByName(ERole.ADMIN);
         Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
 
         if (optionalRole.isEmpty() || optionalUser.isPresent()) {
@@ -66,7 +68,17 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
                 .admin(true)
                 .active(true)
                 .build();
+        User pawelAccount = User.builder()
+                .firstName("Super")
+                .lastName("Admin2")
+                .email("super.admin2@email.com")
+                .password(passwordEncoder.encode("123456"))
+                .title("Mr")
+                .role(adminRole.get())
+                .admin(true)
+                .active(true)
+                .build();
 
-        userRepository.save(user);
+        userRepository.saveAll(List.of(user,pawelAccount));
     }
 }
