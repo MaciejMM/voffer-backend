@@ -46,6 +46,7 @@ dependencies {
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-web")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-webflux")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-logging")
+    implementation(group = "org.springframework.boot", name = "spring-boot-starter-validation")
     implementation(group = "ch.qos.logback", name = "logback-classic")
     implementation(group = "io.jsonwebtoken", name = "jjwt-api", version = "0.11.5")
     implementation(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.5")
@@ -78,18 +79,18 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-//tasks.withType<JavaCompile> {
-//    if (project.hasProperty("spring.profiles.active") &&
-//        (project.property("spring.profiles.active") == "prod" || project.property("spring.profiles.active") == "test")
-//    ) {
-//        options.forkOptions.memoryMaximumSize = "512m"
-//    }
-//}
-//
-//tasks.withType<JavaExec> {
-//    if (project.hasProperty("spring.profiles.active") &&
-//        (project.property("spring.profiles.active") == "prod" || project.property("spring.profiles.active") == "test")
-//    ) {
-//        jvmArgs = listOf("-Xmx512m")
-//    }
-//}
+tasks.withType<JavaCompile> {
+    if (project.hasProperty("spring.profiles.active") &&
+        (project.property("spring.profiles.active") == "prod" || project.property("spring.profiles.active") == "test")
+    ) {
+        options.forkOptions.memoryMaximumSize = "512m"
+    }
+}
+
+tasks.withType<JavaExec> {
+    if (project.hasProperty("spring.profiles.active") &&
+        (project.property("spring.profiles.active") == "prod" || project.property("spring.profiles.active") == "test")
+    ) {
+        jvmArgs = listOf("-Xmx512m")
+    }
+}

@@ -1,14 +1,14 @@
 package com.example.freight.auth.models.request;
 
 import com.example.freight.auth.models.entity.ERole;
-import lombok.Builder;
+import jakarta.validation.constraints.NotNull;
 
-@Builder
 public record UserRequest(
-        String email,
-        String password,
-        String firstName,
-        String lastName,
-        String title,
-        ERole role
-) {}
+        @NotNull String email,
+        @NotNull String password,
+        @NotNull String firstName,
+        @NotNull String lastName,
+        @NotNull String title,
+        @NotNull ERole role
+) {
+}

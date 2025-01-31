@@ -3,7 +3,6 @@ package com.example.freight.auth;
 import com.example.freight.auth.models.entity.ERole;
 import com.example.freight.auth.models.entity.Role;
 import com.example.freight.auth.models.entity.User;
-import com.example.freight.auth.models.request.RegisterUserDto;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -40,19 +39,10 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     private void createSuperAdministrator() {
-        RegisterUserDto userDto = RegisterUserDto.builder()
-                .firstName("Super")
-                .lastName("Admin")
-                .email("super.admin@email.com")
-                .password("123456")
-                .title("Mr")
-                .admin(true)
-                .active(true)
-                .build();
 
         Optional<Role> optionalRole = roleRepository.findByName(ERole.SUPER_ADMIN);
         Optional<Role> adminRole = roleRepository.findByName(ERole.ADMIN);
-        Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
+        Optional<User> optionalUser = userRepository.findByEmail("super.admin@email.com");
 
         if (optionalRole.isEmpty() || optionalUser.isPresent()) {
             return;
@@ -79,6 +69,6 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
                 .active(true)
                 .build();
 
-        userRepository.saveAll(List.of(user,pawelAccount));
+        userRepository.saveAll(List.of(user, pawelAccount));
     }
 }

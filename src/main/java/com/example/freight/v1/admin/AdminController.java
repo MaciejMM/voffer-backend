@@ -2,9 +2,9 @@ package com.example.freight.v1.admin;
 
 import com.example.freight.auth.models.entity.User;
 import com.example.freight.auth.models.request.UserRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class AdminController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody final UserRequest userRequest) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody final UserRequest userRequest) {
         final User user = userService.createUser(userRequest);
         return ResponseEntity.ok().body(user);
     }

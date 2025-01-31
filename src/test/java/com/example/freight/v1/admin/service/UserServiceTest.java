@@ -57,14 +57,7 @@ class UserServiceTest {
                 .role(role)
                 .createdAt(LocalDateTime.now())
                 .build();
-        UserRequest userRequest = UserRequest.builder()
-                .email("simple@email.com")
-                .firstName("John")
-                .lastName("Doe")
-                .password("password")
-                .role(ERole.USER)
-                .title("Mr.")
-                .build();
+        UserRequest userRequest = new UserRequest("simple@email.com", "password", "John", "Doe", "Mr.", ERole.USER);
 
         // when
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());

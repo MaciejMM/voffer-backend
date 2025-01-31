@@ -1,13 +1,13 @@
 package com.example.freight.v1.admin;
 
 import com.example.freight.auth.models.entity.Role;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 
 public record UserUpdateRequest(
-        @NotBlank String firstName,
-        @NotBlank String lastName,
-        @NotBlank String title,
+        @NotEmpty String firstName,
+        @NotEmpty String lastName,
+        @NotEmpty String title,
         Role role,
         boolean active
 
