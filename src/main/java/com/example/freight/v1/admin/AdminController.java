@@ -36,9 +36,9 @@ public class AdminController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> updateUser(final @PathVariable Long id, final @RequestBody UserUpdateRequest userRequest) {
-        userService.updateUser(id, userRequest);
-        return ResponseEntity.ok().body(Map.of(BODY_MESSAGE, "User updated successfully"));
+    public ResponseEntity<User> updateUser(final @PathVariable Long id, final @RequestBody UserUpdateRequest userRequest) {
+        final User user = userService.updateUser(id, userRequest);
+        return ResponseEntity.ok().body(user);
     }
 
 

@@ -76,7 +76,7 @@ public class User implements UserDetails {
     @Column(name="teleroute_credentials")
     private String telerouteCredentials;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
 

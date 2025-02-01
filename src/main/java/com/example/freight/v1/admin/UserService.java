@@ -84,31 +84,31 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void updateUser(final Long userId, final UserUpdateRequest userUpdateRequest) {
-        Optional
-                .ofNullable(userRepository.findById(userId).orElseThrow(() -> new ApiRequestException("Unauthorized operation")))
-                .ifPresent(user -> {
-                    if (userUpdateRequest.firstName() != null) {
-                        user.setFirstName(userUpdateRequest.firstName());
-                    }
-                    if (userUpdateRequest.lastName() != null) {
-                        user.setLastName(userUpdateRequest.lastName());
-                    }
-                    if (userUpdateRequest.title() != null) {
-                        user.setTitle(userUpdateRequest.title());
-                    }
-                    if (userUpdateRequest.role() != null) {
-                        Optional<Role> optionalRole = roleRepository.findByName(userUpdateRequest.role().getName());
-                        optionalRole.ifPresent(user::setRole);
-                    }
-
-                    user.setUpdatedAt(LocalDateTime.now());
-                    try {
-                        userRepository.save(user);
-                    } catch (DataIntegrityViolationException e) {
-                        throw new ApiRequestException("User update failed", e);
-                    }
-                });
+    public User updateUser(final Long userId, final UserUpdateRequest userUpdateRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        updateUserFields(user, userUpdateRequest);
+        user.setUpdatedAt(LocalDateTime.now());
+        try {
+            return userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new ApiRequestException("User update failed", e);
+        }
+    }
+    private void updateUserFields(final User user,final UserUpdateRequest userUpdateRequest) {
+        if (userUpdateRequest.firstName() != null) {
+            user.setFirstName(userUpdateRequest.firstName());
+        }
+        if (userUpdateRequest.lastName() != null) {
+            user.setLastName(userUpdateRequest.lastName());
+        }
+        if (userUpdateRequest.title() != null) {
+            user.setTitle(userUpdateRequest.title());
+        }
+        if (userUpdateRequest.role() != null) {
+            roleRepository.findByName(userUpdateRequest.role().getName())
+                    .ifPresent(user::setRole);
+        }
     }
 
     public void deleteUser(final Long userId) {
