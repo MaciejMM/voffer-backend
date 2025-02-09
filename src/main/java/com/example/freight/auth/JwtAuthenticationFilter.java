@@ -1,37 +1,43 @@
 package com.example.freight.auth;
 
+import com.example.freight.auth.models.entity.User;
 import com.example.freight.exception.CustomErrorHandler;
 import com.example.freight.exception.UserNotFoundException;
+import com.kinde.token.KindeToken;
 import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private static final String ROLE_PREFIX = "ROLE_";
     private final UserRepository userRepository;
     private final CustomErrorHandler customErrorHandler;
+    private final TokenUtils tokenUtils;
 
     public JwtAuthenticationFilter(
-            final JwtService jwtService,
             final UserRepository userRepository,
-            final CustomErrorHandler customErrorHandler) {
-        this.jwtService = jwtService;
+            final CustomErrorHandler customErrorHandler,
+             TokenUtils tokenUtils) {
         this.userRepository = userRepository;
         this.customErrorHandler = customErrorHandler;
+        this.tokenUtils = tokenUtils;
     }
 
 
@@ -49,24 +55,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            final String jwt = authHeader.substring(7);
-            final String userEmail = jwtService.extractUsername(jwt);
+            KindeToken parse = tokenUtils.decodeToken(authHeader);
+            final String userId = parse.getUser();
+            final User user = userRepository.findByKindeId(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
 
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            List<GrantedAuthority> authorities = ((List<?>) parse.getClaim("roles"))
+                    .stream()
+                    .filter(role -> role instanceof Map)
+                    .map(role -> (Map<?, ?>) role)
+                    .map(role -> new SimpleGrantedAuthority(ROLE_PREFIX + role.get("key")))
+                    .collect(Collectors.toList());
 
-            if (userEmail != null && authentication == null) {
-                UserDetails userDetails = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException("User not found"));
-                if (jwtService.isTokenValid(jwt, userDetails)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
+            UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+                    user.getKindeId(),
+                    "",
+                    authorities
+            );
 
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
-            }
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    authorities
+            );
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
             filterChain.doFilter(request, response);
         } catch (Exception exception) {

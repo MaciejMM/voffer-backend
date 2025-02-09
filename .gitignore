@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 credentials.yaml
 logs/
+src/main/resources/create_user.sql
 
 ### STS ###
 .apt_generated

@@ -9,12 +9,12 @@ import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteRes
 import org.springframework.stereotype.Service;
 
 @Service
-public class OfferMapper  {
+public class OfferMapper {
 
-    public  Offer createOffer(final TelerouteResponseDto telerouteResponseDto,
+    public Offer createOffer(final TelerouteResponseDto telerouteResponseDto,
                              final VehicleOfferRequest vehicleOfferRequest,
-                             final User user) {
-        return  Offer.builder()
+                             final String userId) {
+        return Offer.builder()
                 .telerouteOfferId(telerouteResponseDto.getOfferId())
                 .telerouteExternalId(telerouteResponseDto.getExternalId())
                 .goodsType(vehicleOfferRequest.goodsType())
@@ -30,9 +30,10 @@ public class OfferMapper  {
                 .unloadingPlace(mapUnloadingPlace(vehicleOfferRequest))
                 .transeuOfferId(null)
                 .timoconOfferId(null)
-                .userId(user.getId().toString())
+                .userId(userId)
                 .build();
     }
+
     private static UnloadingPlace mapUnloadingPlace(final VehicleOfferRequest vehicleOfferRequest) {
         final VehicleOfferRequest.UnloadingPlace unloadingPlace = vehicleOfferRequest.unloadingPlace();
         return UnloadingPlace.builder()

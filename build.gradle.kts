@@ -53,13 +53,13 @@ dependencies {
     implementation(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.5")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-security")
     implementation(group = "com.google.code.gson", name = "gson", version = "2.11.0")
+    implementation(group = "com.kinde.spring", name = "kinde-springboot-starter",version="2.0.1")
 
     implementation(
         group = "org.springdoc",
         name = "springdoc-openapi-starter-webmvc-ui",
         version = Versions.SWAGGER_VERSION
     )
-
 
 
     compileOnly(group = "org.projectlombok", name = "lombok")

@@ -17,7 +17,6 @@ public class TelerouteRequestMapper {
     private String ownerLogin;
 
     public TelerouteRequest map(final VehicleOfferRequest vehicleOfferRequest) {
-
         return TelerouteRequest
                 .builder()
                 .departure(departureMapper(vehicleOfferRequest.loadingPlace()))

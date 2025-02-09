@@ -41,6 +41,9 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "kinde_id", length = 100, unique = true)
+    private String kindeId;
+
     @NotNull
     @Column(name = "email", length = 100, unique = true)
     private String email;
@@ -51,9 +54,6 @@ public class User implements UserDetails {
 
     @Column(name = "last_name", length = 50)
     private String lastName;
-
-    @Size(max = 120)
-    private String password;
 
     @NotNull
     @Column(name = "title")
@@ -84,6 +84,11 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.getName().toString());
         return List.of(authority);    }
+
+    @Override
+    public String getPassword() {
+        return "";
+    }
 
     @Override
     public String getUsername() {

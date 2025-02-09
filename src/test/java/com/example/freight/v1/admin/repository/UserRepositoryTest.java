@@ -38,7 +38,6 @@ class UserRepositoryTest {
             User.builder()
                     .firstName("John")
                     .lastName("Doe")
-                    .password("password")
                     .email("johndoe@email.com")
                     .title("Mr.")
                     .role(role)
@@ -47,7 +46,6 @@ class UserRepositoryTest {
                     .build(),
             User.builder().firstName("jane")
                     .lastName("Zoe")
-                    .password("password")
                     .email("janedoe@email.com")
                     .title("Mrs.")
                     .role(role2)
@@ -65,7 +63,6 @@ class UserRepositoryTest {
         User user = User.builder()
                 .firstName("John")
                 .lastName("Doe")
-                .password("password")
                 .email("johndoe@email.com")
                 .title("Mr.")
                 .role(role)

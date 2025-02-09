@@ -1,8 +1,7 @@
 package com.example.freight.v1.vehicleOffer.service;
 
-import com.example.freight.auth.UserRepository;
-import com.example.freight.auth.models.entity.User;
 import com.example.freight.exception.NotFoundException;
+import com.example.freight.utlis.JsonUtil;
 import com.example.freight.v1.vehicleOffer.model.entity.Offer;
 import com.example.freight.v1.vehicleOffer.model.offer.VehicleOfferRequest;
 import com.example.freight.v1.vehicleOffer.model.teleroute.request.TelerouteRequest;
@@ -11,52 +10,51 @@ import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteRes
 import com.example.freight.v1.vehicleOffer.repository.OfferRepository;
 import com.example.freight.v1.vehicleOffer.service.teleroute.TelerouteRequestMapper;
 import com.example.freight.v1.vehicleOffer.service.teleroute.TelerouteService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class VehicleOfferService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(VehicleOfferService.class);
 
     private final TelerouteService telerouteService;
     private final TelerouteRequestMapper telerouteRequestMapper;
     private final OfferRepository offerRepository;
-    private final UserRepository userRepository;
     private final OfferMapper offerMapper;
 
     public VehicleOfferService(final TelerouteService telerouteService,
                                final TelerouteRequestMapper telerouteRequestMapper,
-                               final OfferRepository offerRepository,
-                               final UserRepository userRepository, OfferMapper offerMapper) {
+                               final OfferRepository offerRepository, OfferMapper offerMapper) {
         this.telerouteService = telerouteService;
         this.telerouteRequestMapper = telerouteRequestMapper;
         this.offerRepository = offerRepository;
-        this.userRepository = userRepository;
         this.offerMapper = offerMapper;
     }
 
-    public void createVehicleOffer(final VehicleOfferRequest vehicleOfferRequest) {
-        final User user = getUser();
+    public Offer createVehicleOffer(final VehicleOfferRequest vehicleOfferRequest) {
+        LOGGER.info("Creating offer: {}", JsonUtil.toJson(vehicleOfferRequest));
         final TelerouteRequest map = telerouteRequestMapper.map(vehicleOfferRequest);
         final TelerouteResponseDto telerouteResponseDto = telerouteService.createOffer(map);
-        final Offer build = offerMapper.createOffer(telerouteResponseDto, vehicleOfferRequest, user);
-        offerRepository.save(build);
+        final Offer build = offerMapper.createOffer(
+                telerouteResponseDto,
+                vehicleOfferRequest,
+                getUserId());
+        return offerRepository.save(build);
     }
 
     public List<Offer> getOffers() {
-        final User user = getUser();
         return offerRepository
-                .findAllByUserId(user.getId().toString())
+                .findAllByUserId(getUserId())
                 .orElseThrow(() -> new NotFoundException("Offers not found"));
     }
 
     public void updateVehicleOffer(final String id) {
-        final User user = getUser();
-        TelerouteResponse telerouteResponse = offerRepository.findOfferByIdAndUserId(Long.valueOf(id), user.getId().toString())
+        TelerouteResponse telerouteResponse = offerRepository.findOfferByIdAndUserId(Long.valueOf(id), getUserId())
                 .map(offer -> {
                     final String telerouteExternalId = offer.getTelerouteExternalId();
                     return telerouteService.getOffer(telerouteExternalId);
@@ -66,14 +64,12 @@ public class VehicleOfferService {
     }
 
 
-    public void deleteOffer(final String id) {
-        final User user = getUser();
-        final Long ID = Long.valueOf(id);
-        final Offer offer = offerRepository.findOfferByIdAndUserId(ID, user.getId().toString()).orElseThrow(() -> new NotFoundException("Offer not found"));
+    public void deleteOffer(final Long id) {
+        final Offer offer = offerRepository.findOfferByIdAndUserId(id, getUserId()).orElseThrow(() -> new NotFoundException("Offer not found"));
         final String externalId = offer.getTelerouteExternalId();
 
         if (externalId == null) {
-            offerRepository.deleteById(id);
+            offerRepository.deleteById(id.toString());
             return;
         }
 
@@ -81,13 +77,12 @@ public class VehicleOfferService {
         if (telerouteOffer != null) {
             telerouteService.deleteOffer(externalId);
         }
-        offerRepository.deleteById(id);
+        offerRepository.deleteById(id.toString());
     }
 
-    private User getUser() {
+    private String getUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new NotFoundException("User not found"));
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        return principal.getUsername();
     }
 }

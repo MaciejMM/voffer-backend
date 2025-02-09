@@ -5,10 +5,10 @@ import jakarta.validation.constraints.NotNull;
 
 public record UserRequest(
         @NotNull String email,
-        @NotNull String password,
         @NotNull String firstName,
         @NotNull String lastName,
         @NotNull String title,
+        @NotNull String username,
         @NotNull ERole role
 ) {
 }

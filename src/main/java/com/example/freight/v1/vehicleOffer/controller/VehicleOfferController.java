@@ -3,6 +3,7 @@ package com.example.freight.v1.vehicleOffer.controller;
 import com.example.freight.v1.vehicleOffer.model.entity.Offer;
 import com.example.freight.v1.vehicleOffer.model.offer.VehicleOfferRequest;
 import com.example.freight.v1.vehicleOffer.service.VehicleOfferService;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,15 +17,14 @@ import java.util.Map;
 public class VehicleOfferController {
 
     private final VehicleOfferService vehicleOfferService;
-
     public VehicleOfferController(final VehicleOfferService vehicleOfferService) {
         this.vehicleOfferService = vehicleOfferService;
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createVehicleOffer(final @RequestBody VehicleOfferRequest vehicleOfferRequest) {
-        vehicleOfferService.createVehicleOffer(vehicleOfferRequest);
-        return ResponseEntity.ok().body(Map.of("Message", "Offer created successfully"));
+    public ResponseEntity<Offer> createVehicleOffer(final @RequestBody VehicleOfferRequest vehicleOfferRequest) {
+        final Offer vehicleOffer = vehicleOfferService.createVehicleOffer(vehicleOfferRequest);
+        return ResponseEntity.ok().body(vehicleOffer);
     }
 
     @GetMapping
@@ -33,12 +33,13 @@ public class VehicleOfferController {
     }
 
     @PutMapping(value = "/{id}")
-    public String updateVehicleOffer(final @PathVariable String id) {
-        return "All good. You can see this because you are Authenticated.";
+    public HttpEntity<Map<String, String>> updateVehicleOffer(final @PathVariable String id) {
+        return ResponseEntity.ok().body(Map.of("Message", "Offer updated successfully"));
+
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Map<String, String>> deleteVehicleOffer(final @PathVariable String id) {
+    public ResponseEntity<Map<String, String>> deleteVehicleOffer(final @PathVariable Long id) {
         vehicleOfferService.deleteOffer(id);
         return ResponseEntity.ok().body(Map.of("Message", "Offer deleted successfully"));
     }

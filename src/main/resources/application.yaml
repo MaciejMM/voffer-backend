@@ -9,17 +9,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
 
-security:
-  jwt:
-    secret: ${jwt.secret}
-    expirationTime: ${jwt.expirationTime}
-    issuer: http://localhost:8080
-    audience: http://localhost:4200
 
 logging:
   pattern:
@@ -31,3 +26,16 @@ teleroute:
   username: ${teleroute.username}
   password: ${teleroute.password}
   url: https://api.fx.demo.wktransportservices.com
+
+kinde:
+  management:
+    url: ${kinde_management.url}
+    client_id: ${kinde_management.client_id}
+    client_secret: ${kinde_management.client_secret}
+    audience: ${kinde_management.audience}
+  oauth2:
+    domain: ${kindeoauth.domain}
+    client-id: ${kindeoauth.client_id}
+    client-secret: ${kindeoauth.client_secret}
+    scopes: ${kindeoauth.scopes}
+    uri: ${kindeoauth.uri}
