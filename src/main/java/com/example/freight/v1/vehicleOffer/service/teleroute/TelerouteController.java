@@ -3,7 +3,6 @@ package com.example.freight.v1.vehicleOffer.service.teleroute;
 import com.example.freight.v1.vehicleOffer.model.teleroute.auth.TelerouteCredentials;
 import com.example.freight.v1.vehicleOffer.model.teleroute.auth.TokenResponse;
 import jakarta.servlet.http.HttpServletResponse;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -17,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class TelerouteController {
 
     private static final String SET_COOKIE_KEY = "Set-Cookie";
-    private static final String REFRESH_TOKEN = "refresh_token";
-    private static final String ACCESS_TOKEN = "access_token";
+    private static final String REFRESH_TOKEN = "teleroute_refresh_token";
+    private static final String ACCESS_TOKEN = "teleroute_access_token";
     private static final String SAME_SITE_STRICT = "Strict";
     private static final String DEFAULT_COOKIE_PATH = "/";
     private final TelerouteTokenService telerouteTokenService;
@@ -42,7 +41,7 @@ public class TelerouteController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<Void> refreshAccessToken(final @CookieValue("refresh_token") String refreshToken, final HttpServletResponse response) {
+    public ResponseEntity<Void> refreshAccessToken(final @CookieValue("teleroute_refresh_token") String refreshToken, final HttpServletResponse response) {
         final TokenResponse newTokens = telerouteTokenService.refreshAccessToken(refreshToken);
         final ResponseCookie accessTokenCookie = responseCookieBuilder(ACCESS_TOKEN, newTokens.access_token(), 3600);
 

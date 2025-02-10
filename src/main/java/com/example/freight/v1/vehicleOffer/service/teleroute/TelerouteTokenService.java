@@ -48,6 +48,9 @@ public class TelerouteTokenService {
                 .onStatus(HttpStatusCode::is5xxServerError, clientResponse ->
                         Mono.error(new ServerResponseException("Teleroute server error"))
                 )
+                .onStatus(HttpStatusCode::is4xxClientError, clientResponse ->
+                        Mono.error(new ServerResponseException("Niepoprawny login lub hasło"))
+                )
                 .bodyToMono(TokenResponse.class)
                 .block();
     }

@@ -33,10 +33,10 @@ public class TelerouteService {
         this.telerouteTokenService = telerouteTokenService;
     }
 
-    public TelerouteResponseDto createOffer(final TelerouteRequest telerouteRequest) {
+    public TelerouteResponseDto createOffer(final TelerouteRequest telerouteRequest, final String accessToken) {
         try {
-            TokenResponse accessToken = telerouteTokenService.getAccessToken();
-            LOGGER.info(telerouteRequest.toString());
+//            TokenResponse accessToken = telerouteTokenService.getAccessToken();
+//            LOGGER.info(telerouteRequest.toString());
 
             final String telerouteResponse = sendRequest(telerouteRequest, accessToken);
             final TelerouteResponse telerouteResponse1 = parseResponse(telerouteResponse);
@@ -84,10 +84,10 @@ public class TelerouteService {
 
 
 
-    private String sendRequest(final TelerouteRequest telerouteRequest, final TokenResponse accessToken) {
+    private String sendRequest(final TelerouteRequest telerouteRequest, final String accessToken) {
         return webClient.post()
                 .uri(String.format("%s/vehicle/offers", telerouteUrl))
-                .header("Authorization", "Bearer " + accessToken.access_token())
+                .header("Authorization", "Bearer " + accessToken)
                 .header("Content-Type", CONTENT_TYPE)
                 .header("Accept-Version", "v2")
                 .bodyValue(telerouteRequest)

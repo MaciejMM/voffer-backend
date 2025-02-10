@@ -36,10 +36,10 @@ public class VehicleOfferService {
         this.offerMapper = offerMapper;
     }
 
-    public Offer createVehicleOffer(final VehicleOfferRequest vehicleOfferRequest) {
+    public Offer createVehicleOffer(final VehicleOfferRequest vehicleOfferRequest, final String accessToken) {
         LOGGER.info("Creating offer: {}", JsonUtil.toJson(vehicleOfferRequest));
         final TelerouteRequest map = telerouteRequestMapper.map(vehicleOfferRequest);
-        final TelerouteResponseDto telerouteResponseDto = telerouteService.createOffer(map);
+        final TelerouteResponseDto telerouteResponseDto = telerouteService.createOffer(map, accessToken);
         final Offer build = offerMapper.createOffer(
                 telerouteResponseDto,
                 vehicleOfferRequest,

@@ -17,13 +17,14 @@ import java.util.Map;
 public class VehicleOfferController {
 
     private final VehicleOfferService vehicleOfferService;
+
     public VehicleOfferController(final VehicleOfferService vehicleOfferService) {
         this.vehicleOfferService = vehicleOfferService;
     }
 
     @PostMapping
-    public ResponseEntity<Offer> createVehicleOffer(final @RequestBody VehicleOfferRequest vehicleOfferRequest) {
-        final Offer vehicleOffer = vehicleOfferService.createVehicleOffer(vehicleOfferRequest);
+    public ResponseEntity<Offer> createVehicleOffer(final @RequestBody VehicleOfferRequest vehicleOfferRequest, final @CookieValue("teleroute_access_token") String accessToken) {
+        final Offer vehicleOffer = vehicleOfferService.createVehicleOffer(vehicleOfferRequest, accessToken);
         return ResponseEntity.ok().body(vehicleOffer);
     }
 
