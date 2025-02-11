@@ -29,7 +29,7 @@ public class OfferHistory {
     private String userId;
 
     @Column(name = "offer_id")
-    private Long offerId;
+    private String offerId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

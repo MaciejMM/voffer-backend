@@ -22,7 +22,7 @@ public class OfferHistoryService {
 
         final OfferHistory offerHistory = OfferHistory.builder()
                 .userId(offer.getUserId())
-                .offerId(offer.getId())
+                .offerId(offer.getTelerouteOfferId())
                 .createdAt(LocalDateTime.parse(offer.getPublishDateTime()))
                 .status(offerHistoryStatus)
                 .build();
