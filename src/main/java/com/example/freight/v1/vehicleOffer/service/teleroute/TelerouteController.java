@@ -56,7 +56,7 @@ public class TelerouteController {
         return ResponseCookie.from(refreshToken, tokenResponse)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite(SAME_SITE_STRICT)
+                .sameSite("None")
                 .path(DEFAULT_COOKIE_PATH)
                 .maxAge(maxAgeSeconds)
                 .build();
