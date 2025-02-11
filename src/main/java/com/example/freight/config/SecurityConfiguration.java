@@ -63,7 +63,6 @@ public class SecurityConfiguration {
                 "https://voffer-d18ce4ed1b53.herokuapp.com",
                 "https://voffer-lkkhkbrq52jbt3t.eu.kinde.com"
         ));
-        configuration.setAllowedOrigins(Collections.singletonList("*"));
         configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE","OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
