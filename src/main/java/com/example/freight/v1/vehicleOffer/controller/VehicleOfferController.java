@@ -40,8 +40,9 @@ public class VehicleOfferController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Map<String, String>> deleteVehicleOffer(final @PathVariable Long id) {
-        vehicleOfferService.deleteOffer(id);
+    public ResponseEntity<Map<String, String>> deleteVehicleOffer(final @PathVariable Long id,
+                                                                  final @CookieValue("teleroute_access_token") String accessToken) {
+        vehicleOfferService.deleteOffer(id, accessToken);
         return ResponseEntity.ok().body(Map.of("Message", "Offer deleted successfully"));
     }
 }

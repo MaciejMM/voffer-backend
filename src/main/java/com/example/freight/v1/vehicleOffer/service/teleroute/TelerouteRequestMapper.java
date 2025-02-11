@@ -2,7 +2,6 @@ package com.example.freight.v1.vehicleOffer.service.teleroute;
 
 import com.example.freight.v1.vehicleOffer.model.offer.VehicleOfferRequest;
 import com.example.freight.v1.vehicleOffer.model.teleroute.request.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,16 +12,14 @@ import static java.util.Optional.ofNullable;
 @Service
 public class TelerouteRequestMapper {
 
-    @Value("${teleroute.username}")
-    private String ownerLogin;
 
-    public TelerouteRequest map(final VehicleOfferRequest vehicleOfferRequest) {
+    public TelerouteRequest map(final VehicleOfferRequest vehicleOfferRequest,final String telerouteUser) {
         return TelerouteRequest
                 .builder()
                 .departure(departureMapper(vehicleOfferRequest.loadingPlace()))
                 .arrival(arrivalMapper(vehicleOfferRequest.unloadingPlace()))
                 .loadDescription(loadDescriptionMapper(vehicleOfferRequest))
-                .owner(Owner.builder().login(ownerLogin).build())
+                .owner(Owner.builder().login(telerouteUser).build())
                 .build();
     }
 

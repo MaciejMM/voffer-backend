@@ -15,12 +15,6 @@ public class TelerouteTokenService {
     @Value("${teleroute.url}")
     private String telerouteUrl;
 
-    @Value("${teleroute.username}")
-    private String telerouteUsername;
-
-    @Value("${teleroute.password}")
-    private String teleroutePassword;
-
     private final WebClient webClient;
 
     private static final String TELEROUTE_URL = "%s/user/token?client_id=freightexchange&client_secret=secret&scope=any&grant_type=password&username=%s&password=%s";
@@ -28,17 +22,6 @@ public class TelerouteTokenService {
 
     public TelerouteTokenService(final WebClient webClient) {
         this.webClient = webClient;
-    }
-
-    public TokenResponse getAccessToken() {
-        return webClient.post()
-                .uri(String.format(TELEROUTE_URL, telerouteUrl, telerouteUsername, teleroutePassword))
-                .retrieve()
-                .onStatus(HttpStatusCode::is5xxServerError, clientResponse ->
-                        Mono.error(new ServerResponseException("Teleroute server error"))
-                )
-                .bodyToMono(TokenResponse.class)
-                .block();
     }
 
     public TokenResponse getAccessToken(final TelerouteCredentials telerouteCredentials) {

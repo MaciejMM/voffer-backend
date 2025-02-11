@@ -11,12 +11,14 @@ import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteRes
 import com.example.freight.v1.vehicleOffer.repository.OfferRepository;
 import com.example.freight.v1.vehicleOffer.service.teleroute.TelerouteRequestMapper;
 import com.example.freight.v1.vehicleOffer.service.teleroute.TelerouteService;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -43,7 +45,8 @@ public class VehicleOfferService {
 
     public Offer createVehicleOffer(final VehicleOfferRequest vehicleOfferRequest, final String accessToken) {
         LOGGER.info("Creating offer: {}", JsonUtil.toJson(vehicleOfferRequest));
-        final TelerouteRequest map = telerouteRequestMapper.map(vehicleOfferRequest);
+        final TelerouteToken telerouteToken = decodeAccessToken(accessToken);
+        final TelerouteRequest map = telerouteRequestMapper.map(vehicleOfferRequest,telerouteToken.getUserName());
         final TelerouteResponseDto telerouteResponseDto = telerouteService.createOffer(map, accessToken);
         final Offer build = offerMapper.createOffer(
                 telerouteResponseDto,
@@ -59,18 +62,18 @@ public class VehicleOfferService {
                 .orElseThrow(() -> new NotFoundException("Offers not found"));
     }
 
-    public void updateVehicleOffer(final String id) {
+    public void updateVehicleOffer(final String id,final String accessToken) {
         TelerouteResponse telerouteResponse = offerRepository.findOfferByIdAndUserId(Long.valueOf(id), getUserId())
                 .map(offer -> {
                     final String telerouteExternalId = offer.getTelerouteExternalId();
-                    return telerouteService.getOffer(telerouteExternalId);
+                    return telerouteService.getOffer(telerouteExternalId,accessToken);
                 })
                 .orElseThrow(() -> new NotFoundException("Offer not found"));
 
     }
 
 
-    public void deleteOffer(final Long id) {
+    public void deleteOffer(final Long id,final String accessToken) {
         final Offer offer = offerRepository.findOfferByIdAndUserId(id, getUserId()).orElseThrow(() -> new NotFoundException("Offer not found"));
         final String externalId = offer.getTelerouteExternalId();
 
@@ -79,9 +82,9 @@ public class VehicleOfferService {
             return;
         }
 
-        final TelerouteResponse telerouteOffer = telerouteService.getOffer(externalId);
+        final TelerouteResponse telerouteOffer = telerouteService.getOffer(externalId,accessToken);
         if (telerouteOffer != null) {
-            telerouteService.deleteOffer(externalId);
+            telerouteService.deleteOffer(externalId,accessToken);
         }
         offerRepository.deleteById(id.toString());
     }
@@ -90,5 +93,22 @@ public class VehicleOfferService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
         return principal.getUsername();
+    }
+
+    private TelerouteToken decodeAccessToken(String accessToken) {
+        final String[] chunks = accessToken.split("\\.");
+        final Base64.Decoder decoder = Base64.getUrlDecoder();
+        final String payload = new String(decoder.decode(chunks[1]));
+        return JsonUtil.fromJson(payload, TelerouteToken.class);
+    }
+
+    @AllArgsConstructor
+    private static class TelerouteToken{
+        private String user_name;
+        private Long exp;
+
+        public String getUserName() {
+            return user_name;
+        }
     }
 }

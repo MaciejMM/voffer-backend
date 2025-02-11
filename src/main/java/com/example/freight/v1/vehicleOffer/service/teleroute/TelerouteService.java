@@ -1,7 +1,6 @@
 package com.example.freight.v1.vehicleOffer.service.teleroute;
 
 import com.example.freight.utlis.JsonUtil;
-import com.example.freight.v1.vehicleOffer.model.teleroute.auth.TokenResponse;
 import com.example.freight.v1.vehicleOffer.model.teleroute.request.TelerouteRequest;
 import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteContent;
 import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteResponse;
@@ -26,17 +25,14 @@ public class TelerouteService {
     private String telerouteUrl;
 
     private final WebClient webClient;
-    private final TelerouteTokenService telerouteTokenService;
 
-    public TelerouteService(final WebClient webClient, final TelerouteTokenService telerouteTokenService) {
+    public TelerouteService(final WebClient webClient) {
         this.webClient = webClient;
-        this.telerouteTokenService = telerouteTokenService;
     }
 
     public TelerouteResponseDto createOffer(final TelerouteRequest telerouteRequest, final String accessToken) {
         try {
-//            TokenResponse accessToken = telerouteTokenService.getAccessToken();
-//            LOGGER.info(telerouteRequest.toString());
+            LOGGER.info(telerouteRequest.toString());
 
             final String telerouteResponse = sendRequest(telerouteRequest, accessToken);
             final TelerouteResponse telerouteResponse1 = parseResponse(telerouteResponse);
@@ -48,11 +44,10 @@ public class TelerouteService {
         }
     }
 
-    public TelerouteResponse getOffer(final String offerId) {
-        TokenResponse accessToken = telerouteTokenService.getAccessToken();
+    public TelerouteResponse getOffer(final String offerId, final String accessToken) {
         return webClient.get()
-                .uri(String.format("%s/vehicle/offers/%s", telerouteUrl,offerId))
-                .header("Authorization", "Bearer " + accessToken.access_token())
+                .uri(String.format("%s/vehicle/offers/%s", telerouteUrl, offerId))
+                .header("Authorization", "Bearer " + accessToken)
                 .header("Content-Type", CONTENT_TYPE)
                 .header("Accept-Version", "v2")
                 .retrieve()
@@ -63,12 +58,11 @@ public class TelerouteService {
                 .block();
     }
 
-    public void deleteOffer(final String offerId) {
+    public void deleteOffer(final String offerId, final String accessToken) {
         try {
-            TokenResponse accessToken = telerouteTokenService.getAccessToken();
             webClient.delete()
                     .uri(String.format("%s/vehicle/offers/%s", telerouteUrl, offerId))
-                    .header("Authorization", "Bearer " + accessToken.access_token())
+                    .header("Authorization", "Bearer " + accessToken)
                     .header("Content-Type", CONTENT_TYPE)
                     .header("Accept-Version", "v2")
                     .retrieve()
@@ -81,7 +75,6 @@ public class TelerouteService {
             LOGGER.error("Error deleting offer: ", e);
         }
     }
-
 
 
     private String sendRequest(final TelerouteRequest telerouteRequest, final String accessToken) {
@@ -117,5 +110,6 @@ public class TelerouteService {
                 .publishDateTime(LocalDateTime.now().toString())
                 .build();
     }
+
 
 }
