@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class OpenStreetMapService {
@@ -61,7 +62,7 @@ public class OpenStreetMapService {
                 .map(info -> {
                             return CityInfo
                                     .builder()
-                                    .city(info.name())
+                                    .city(getCity(info))
                                     .countryCode(info.address().countryCode().toUpperCase())
                                     .postalCode(info.address().postcode())
                                     .displayName(info.displayName())
@@ -69,6 +70,17 @@ public class OpenStreetMapService {
                         }
                 )
                 .collect(Collectors.toList());
+    }
+
+    private  String getCity(final OpenStreetMapResponse info) {
+        return Stream.of(
+                info.address().city(),
+                info.address().town(),
+                info.address().village(),
+                info.address().administrative())
+                .filter(StringUtils::isNotEmpty)
+                .findFirst()
+                .orElse("");
     }
 
     private String getTelerouteCountries() {

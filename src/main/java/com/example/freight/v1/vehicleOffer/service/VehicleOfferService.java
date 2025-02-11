@@ -3,6 +3,7 @@ package com.example.freight.v1.vehicleOffer.service;
 import com.example.freight.exception.NotFoundException;
 import com.example.freight.utlis.JsonUtil;
 import com.example.freight.v1.vehicleOffer.model.entity.Offer;
+import com.example.freight.v1.vehicleOffer.model.entity.OfferHistoryStatus;
 import com.example.freight.v1.vehicleOffer.model.offer.VehicleOfferRequest;
 import com.example.freight.v1.vehicleOffer.model.teleroute.request.TelerouteRequest;
 import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteResponse;
@@ -26,14 +27,18 @@ public class VehicleOfferService {
     private final TelerouteRequestMapper telerouteRequestMapper;
     private final OfferRepository offerRepository;
     private final OfferMapper offerMapper;
+    private final OfferHistoryService offerHistoryService;
 
     public VehicleOfferService(final TelerouteService telerouteService,
                                final TelerouteRequestMapper telerouteRequestMapper,
-                               final OfferRepository offerRepository, OfferMapper offerMapper) {
+                               final OfferRepository offerRepository,
+                               final OfferMapper offerMapper, OfferHistoryService offerHistoryService
+    ) {
         this.telerouteService = telerouteService;
         this.telerouteRequestMapper = telerouteRequestMapper;
         this.offerRepository = offerRepository;
         this.offerMapper = offerMapper;
+        this.offerHistoryService = offerHistoryService;
     }
 
     public Offer createVehicleOffer(final VehicleOfferRequest vehicleOfferRequest, final String accessToken) {
@@ -44,6 +49,7 @@ public class VehicleOfferService {
                 telerouteResponseDto,
                 vehicleOfferRequest,
                 getUserId());
+        offerHistoryService.save(build, OfferHistoryStatus.CREATED);
         return offerRepository.save(build);
     }
 

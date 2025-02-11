@@ -1,6 +1,5 @@
 package com.example.freight.v1.openStreetMap;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -23,8 +22,10 @@ public record OpenStreetMapResponse(
         @SerializedName("boundingbox") List<String> boundingbox
 ) {
     public record AddressDto(
+            String city,
             String town,
             String village,
+            String administrative,
             String municipality,
             String county,
             @SerializedName("state") String state,

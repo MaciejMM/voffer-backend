@@ -59,11 +59,6 @@ public class User implements UserDetails {
     @Column(name = "title")
     private String title;
 
-    @Column(name="admin")
-    private boolean admin;
-
-    @Column(name="active")
-    private boolean active;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -73,9 +68,6 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name="teleroute_credentials")
-    private String telerouteCredentials;
-
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
@@ -83,7 +75,8 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.getName().toString());
-        return List.of(authority);    }
+        return List.of(authority);
+    }
 
     @Override
     public String getPassword() {
