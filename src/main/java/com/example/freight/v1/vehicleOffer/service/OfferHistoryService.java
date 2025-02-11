@@ -20,7 +20,7 @@ public class OfferHistoryService {
 
     public void save(final Offer offer,final OfferHistoryStatus offerHistoryStatus) {
 
-        OfferHistory offerHistory = OfferHistory.builder()
+        final OfferHistory offerHistory = OfferHistory.builder()
                 .userId(offer.getUserId())
                 .offerId(offer.getId())
                 .createdAt(LocalDateTime.parse(offer.getPublishDateTime()))
