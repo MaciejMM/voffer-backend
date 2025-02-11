@@ -36,7 +36,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("api/v1/location/**","/api/v1/teleroute/**").hasAnyRole("SUPER_ADMIN","ADMIN","USER","USER_MANAGER")
                         .requestMatchers("api/v1/admin","api/v1/admin/**").hasAnyRole("SUPER_ADMIN","ADMIN")
