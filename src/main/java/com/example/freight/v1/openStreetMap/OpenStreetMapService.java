@@ -27,13 +27,13 @@ public class OpenStreetMapService {
         this.webClient = webClientBuilder.baseUrl(NOMINATIM_BASE_URL).build();
     }
 
-    public List<CityInfo> searchCities(String query) {
+    public List<CityInfo> searchCities(LocationRequest locationRequest) {
         String response = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("search")
-                        .queryParam("q", query)
+                        .queryParam("q", locationRequest.searchText())
                         .queryParam("format", "json")
-                        .queryParam("countrycodes", getTelerouteCountries())
+                        .queryParam("countrycodes", mapCountries(locationRequest.country()))
                         .queryParam("addressdetails", "1")
                         .build())
                 .header("User-Agent", "YourAppName/1.0")
@@ -72,18 +72,24 @@ public class OpenStreetMapService {
                 .collect(Collectors.toList());
     }
 
-    private  String getCity(final OpenStreetMapResponse info) {
+    private String getCity(final OpenStreetMapResponse info) {
         return Stream.of(
-                info.address().city(),
-                info.address().town(),
-                info.address().village(),
-                info.address().administrative())
+                        info.address().city(),
+                        info.address().town(),
+                        info.address().village(),
+                        info.address().administrative(),
+                        info.address().municipality())
                 .filter(StringUtils::isNotEmpty)
                 .findFirst()
                 .orElse("");
     }
 
-    private String getTelerouteCountries() {
+    private String mapCountries(final String country) {
+        StringUtils.isNotEmpty(country);
+        if(StringUtils.isNotEmpty(country)){
+            return country.toUpperCase();
+        }
+
         return StringUtils.join(",", TelerouteCountry.getCountryCodes().stream().map(String::toUpperCase).collect(Collectors.toList()));
     }
 

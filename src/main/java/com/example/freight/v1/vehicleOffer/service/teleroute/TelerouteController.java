@@ -18,7 +18,6 @@ public class TelerouteController {
     private static final String SET_COOKIE_KEY = "Set-Cookie";
     private static final String REFRESH_TOKEN = "teleroute_refresh_token";
     private static final String ACCESS_TOKEN = "teleroute_access_token";
-    private static final String SAME_SITE_STRICT = "Strict";
     private static final String DEFAULT_COOKIE_PATH = "/";
     private final TelerouteTokenService telerouteTokenService;
 

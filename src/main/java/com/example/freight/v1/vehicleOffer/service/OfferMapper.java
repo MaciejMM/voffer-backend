@@ -8,6 +8,8 @@ import com.example.freight.v1.vehicleOffer.model.offer.VehicleOfferRequest;
 import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteResponseDto;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class OfferMapper {
 
@@ -15,8 +17,8 @@ public class OfferMapper {
                              final VehicleOfferRequest vehicleOfferRequest,
                              final String userId) {
         return Offer.builder()
-                .telerouteOfferId(telerouteResponseDto.getOfferId())
-                .telerouteExternalId(telerouteResponseDto.getExternalId())
+                .telerouteOfferId(Optional.ofNullable(telerouteResponseDto).map(TelerouteResponseDto::getOfferId).orElse(null))
+                .telerouteExternalId(Optional.ofNullable(telerouteResponseDto).map(TelerouteResponseDto::getExternalId).orElse(null))
                 .goodsType(vehicleOfferRequest.goodsType())
                 .loadingBodyType(vehicleOfferRequest.loadingBodyType())
                 .loadingWeight(vehicleOfferRequest.loadingWeight())
@@ -24,7 +26,7 @@ public class OfferMapper {
                 .loadingVolume(vehicleOfferRequest.loadingVolume())
                 .loadingType(vehicleOfferRequest.loadingType().name())
                 .description(vehicleOfferRequest.description())
-                .publishDateTime(telerouteResponseDto.getPublishDateTime())
+                .publishDateTime(Optional.ofNullable(telerouteResponseDto).map(TelerouteResponseDto::getPublishDateTime).orElse(null))
                 .publishSelected(null)
                 .loadingPlace(mapLoadingPlace(vehicleOfferRequest))
                 .unloadingPlace(mapUnloadingPlace(vehicleOfferRequest))

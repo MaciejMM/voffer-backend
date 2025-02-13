@@ -1,5 +1,6 @@
 package com.example.freight.v1.vehicleOffer.service;
 
+import com.example.freight.auth.TokenServiceMapper;
 import com.example.freight.exception.NotFoundException;
 import com.example.freight.utlis.JsonUtil;
 import com.example.freight.v1.vehicleOffer.model.entity.Offer;
@@ -9,9 +10,12 @@ import com.example.freight.v1.vehicleOffer.model.teleroute.request.TelerouteRequ
 import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteResponse;
 import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteResponseDto;
 import com.example.freight.v1.vehicleOffer.repository.OfferRepository;
+import com.example.freight.v1.vehicleOffer.service.teleroute.TelerouteOfferService;
 import com.example.freight.v1.vehicleOffer.service.teleroute.TelerouteRequestMapper;
 import com.example.freight.v1.vehicleOffer.service.teleroute.TelerouteService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -20,36 +24,41 @@ import org.springframework.stereotype.Service;
 
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class VehicleOfferService {
     private static final Logger LOGGER = LoggerFactory.getLogger(VehicleOfferService.class);
 
     private final TelerouteService telerouteService;
-    private final TelerouteRequestMapper telerouteRequestMapper;
     private final OfferRepository offerRepository;
     private final OfferMapper offerMapper;
     private final OfferHistoryService offerHistoryService;
+    private final TokenServiceMapper tokenServiceMapper;
+    private final TelerouteOfferService telerouteOfferService;
 
     public VehicleOfferService(final TelerouteService telerouteService,
-                               final TelerouteRequestMapper telerouteRequestMapper,
                                final OfferRepository offerRepository,
-                               final OfferMapper offerMapper, OfferHistoryService offerHistoryService
+                               final OfferMapper offerMapper,
+                               final OfferHistoryService offerHistoryService,
+                               final TelerouteOfferService telerouteOfferService,
+                               final TokenServiceMapper tokenServiceMapper
     ) {
         this.telerouteService = telerouteService;
-        this.telerouteRequestMapper = telerouteRequestMapper;
         this.offerRepository = offerRepository;
         this.offerMapper = offerMapper;
         this.offerHistoryService = offerHistoryService;
+        this.telerouteOfferService = telerouteOfferService;
+        this.tokenServiceMapper = tokenServiceMapper;
     }
 
-    public Offer createVehicleOffer(final VehicleOfferRequest vehicleOfferRequest, final String accessToken) {
+    public Offer createVehicleOffer(final VehicleOfferRequest vehicleOfferRequest, final HttpServletRequest accessToken) {
         LOGGER.info("Creating offer: {}", JsonUtil.toJson(vehicleOfferRequest));
-        final TelerouteToken telerouteToken = decodeAccessToken(accessToken);
-        final TelerouteRequest map = telerouteRequestMapper.map(vehicleOfferRequest,telerouteToken.getUserName());
-        final TelerouteResponseDto telerouteResponseDto = telerouteService.createOffer(map, accessToken);
+        Map<String, String> tokenMap = tokenServiceMapper.map(accessToken);
+        TelerouteResponseDto offer = telerouteOfferService.createOffer(vehicleOfferRequest, tokenMap);
+
         final Offer build = offerMapper.createOffer(
-                telerouteResponseDto,
+                offer,
                 vehicleOfferRequest,
                 getUserId());
         offerHistoryService.save(build, OfferHistoryStatus.CREATED);
@@ -62,18 +71,18 @@ public class VehicleOfferService {
                 .orElseThrow(() -> new NotFoundException("Offers not found"));
     }
 
-    public void updateVehicleOffer(final String id,final String accessToken) {
+    public void updateVehicleOffer(final String id, final String accessToken) {
         TelerouteResponse telerouteResponse = offerRepository.findOfferByIdAndUserId(Long.valueOf(id), getUserId())
                 .map(offer -> {
                     final String telerouteExternalId = offer.getTelerouteExternalId();
-                    return telerouteService.getOffer(telerouteExternalId,accessToken);
+                    return telerouteService.getOffer(telerouteExternalId, accessToken);
                 })
                 .orElseThrow(() -> new NotFoundException("Offer not found"));
 
     }
 
 
-    public void deleteOffer(final Long id,final String accessToken) {
+    public void deleteOffer(final Long id, final String accessToken) {
         final Offer offer = offerRepository.findOfferByIdAndUserId(id, getUserId()).orElseThrow(() -> new NotFoundException("Offer not found"));
         final String externalId = offer.getTelerouteExternalId();
 
@@ -82,9 +91,10 @@ public class VehicleOfferService {
             return;
         }
 
-        final TelerouteResponse telerouteOffer = telerouteService.getOffer(externalId,accessToken);
+        final TelerouteResponse telerouteOffer = telerouteService.getOffer(externalId, accessToken);
         if (telerouteOffer != null) {
-            telerouteService.deleteOffer(externalId,accessToken);
+            telerouteService.deleteOffer(externalId, accessToken);
+
         }
         offerRepository.deleteById(id.toString());
     }
@@ -95,20 +105,4 @@ public class VehicleOfferService {
         return principal.getUsername();
     }
 
-    private TelerouteToken decodeAccessToken(String accessToken) {
-        final String[] chunks = accessToken.split("\\.");
-        final Base64.Decoder decoder = Base64.getUrlDecoder();
-        final String payload = new String(decoder.decode(chunks[1]));
-        return JsonUtil.fromJson(payload, TelerouteToken.class);
-    }
-
-    @AllArgsConstructor
-    private static class TelerouteToken{
-        private String user_name;
-        private Long exp;
-
-        public String getUserName() {
-            return user_name;
-        }
-    }
 }

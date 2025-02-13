@@ -3,6 +3,7 @@ package com.example.freight.v1.vehicleOffer.controller;
 import com.example.freight.v1.vehicleOffer.model.entity.Offer;
 import com.example.freight.v1.vehicleOffer.model.offer.VehicleOfferRequest;
 import com.example.freight.v1.vehicleOffer.service.VehicleOfferService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,8 @@ public class VehicleOfferController {
     }
 
     @PostMapping
-    public ResponseEntity<Offer> createVehicleOffer(final @RequestBody VehicleOfferRequest vehicleOfferRequest, final @CookieValue("teleroute_access_token") String accessToken) {
-        final Offer vehicleOffer = vehicleOfferService.createVehicleOffer(vehicleOfferRequest, accessToken);
+    public ResponseEntity<Offer> createVehicleOffer(final @RequestBody VehicleOfferRequest vehicleOfferRequest, final HttpServletRequest request) {
+        final Offer vehicleOffer = vehicleOfferService.createVehicleOffer(vehicleOfferRequest, request);
         return ResponseEntity.ok().body(vehicleOffer);
     }
 
