@@ -12,7 +12,7 @@ The project uses Java, Kotlin, and Gradle.
 - Spring Web
 - Spring WebFlux
 - Okta Spring Boot Starter
-- Auth0 Java JWT
+- Kinde Autg
 - PostgreSQL
 - JUnit 5
 
@@ -46,8 +46,8 @@ The application uses a PostgreSQL database. Ensure that the database is properly
 
 ## Running the Application
 To run the application, follow these steps:
-1. Clone the repository: `git clone https://github.com/MaciejMM/freight-backend`
-2. Navigate to the project directory: `cd freight-backend`
+1. Clone the repository: `git clone https://github.com/MaciejMM/voffer-backend`
+2. Navigate to the project directory: `cd voffer-backend`
 3. Run the application: `./gradlew bootRun`
 
 ## Testing
