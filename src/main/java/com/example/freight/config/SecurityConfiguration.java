@@ -40,7 +40,7 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/teleroute/**").permitAll()
-                        .requestMatchers("api/v1/location/**","/api/v1/teleroute/**").hasAnyRole("SUPER_ADMIN","ADMIN","USER","USER_MANAGER")
+                        .requestMatchers("api/v1/location/**","/api/v1/teleroute/**","api/v1/vehicle-offers/**").hasAnyRole("SUPER_ADMIN","ADMIN","USER","USER_MANAGER")
                         .requestMatchers("api/v1/admin","api/v1/admin/**").hasAnyRole("SUPER_ADMIN","ADMIN")
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**","/health-check").permitAll()
                         .anyRequest().authenticated()

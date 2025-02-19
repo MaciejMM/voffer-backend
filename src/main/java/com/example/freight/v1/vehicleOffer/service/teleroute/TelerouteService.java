@@ -18,8 +18,12 @@ import java.util.Optional;
 @Service
 public class TelerouteService {
 
-    private static final String CONTENT_TYPE = "application/json";
     private static final Logger LOGGER = LoggerFactory.getLogger(TelerouteService.class);
+    private static final String CONTENT_TYPE = "application/json";
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String CONTENT_TYPE_HEADER = "Content-Type";
+    private static final String ACCEPT_VERSION_HEADER = "Accept-Version";
+    private static final String DEFAULT_VERSION = "v2";
 
     @Value("${teleroute.url}")
     private String telerouteUrl;
@@ -33,23 +37,34 @@ public class TelerouteService {
     public TelerouteResponseDto createOffer(final TelerouteRequest telerouteRequest, final String accessToken) {
         try {
             LOGGER.info(telerouteRequest.toString());
-
             final String telerouteResponse = sendRequest(telerouteRequest, accessToken);
-            final TelerouteResponse telerouteResponse1 = parseResponse(telerouteResponse);
-
-            return buildResponseDto(telerouteResponse1, null);
+            final TelerouteResponse parsedTelerouteResponse = parseResponse(telerouteResponse);
+            return buildResponseDto(parsedTelerouteResponse, null);
         } catch (Exception e) {
             LOGGER.error("Error creating offer: ", e);
             return buildResponseDto(null, e.getMessage());
         }
     }
 
+
+    public TelerouteResponseDto updateOffer(final TelerouteRequest vehicleOfferRequest, final String externaId, final String accessToken) {
+        try {
+            final String telerouteResponse = sendUpdateOfferRequest(vehicleOfferRequest, externaId, accessToken);
+            final TelerouteResponse parsedTelerouteResponse = parseResponse(telerouteResponse);
+            return buildResponseDto(parsedTelerouteResponse, null);
+        } catch (Exception e) {
+            LOGGER.error("Error updating offer: ", e);
+            return buildResponseDto(null, e.getMessage());
+        }
+    }
+
+
     public TelerouteResponse getOffer(final String offerId, final String accessToken) {
         return webClient.get()
                 .uri(String.format("%s/vehicle/offers/%s", telerouteUrl, offerId))
-                .header("Authorization", "Bearer " + accessToken)
-                .header("Content-Type", CONTENT_TYPE)
-                .header("Accept-Version", "v2")
+                .header(AUTHORIZATION, "Bearer " + accessToken)
+                .header(CONTENT_TYPE_HEADER, CONTENT_TYPE)
+                .header(ACCEPT_VERSION_HEADER, DEFAULT_VERSION)
                 .retrieve()
                 .onStatus(HttpStatusCode::is5xxServerError,
                         clientResponse -> clientResponse.bodyToMono(String.class)
@@ -58,13 +73,27 @@ public class TelerouteService {
                 .block();
     }
 
+
+    public String sendUpdateOfferRequest(final TelerouteRequest vehicleOfferRequest, final String externaId, final String accessToken) {
+        return webClient.put()
+                .uri(String.format("%s/vehicle/offers/%s", telerouteUrl, externaId))
+                .header(AUTHORIZATION, "Bearer " + accessToken)
+                .header(ACCEPT_VERSION_HEADER, DEFAULT_VERSION)
+                .header(CONTENT_TYPE_HEADER, CONTENT_TYPE)
+                .bodyValue(vehicleOfferRequest)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+    }
+
+
     public void deleteOffer(final String offerId, final String accessToken) {
         try {
             webClient.delete()
                     .uri(String.format("%s/vehicle/offers/%s", telerouteUrl, offerId))
-                    .header("Authorization", "Bearer " + accessToken)
-                    .header("Content-Type", CONTENT_TYPE)
-                    .header("Accept-Version", "v2")
+                    .header(AUTHORIZATION, "Bearer " + accessToken)
+                    .header(CONTENT_TYPE_HEADER, CONTENT_TYPE)
+                    .header(ACCEPT_VERSION_HEADER, DEFAULT_VERSION)
                     .retrieve()
                     .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
                             clientResponse -> clientResponse.bodyToMono(String.class)
@@ -80,9 +109,9 @@ public class TelerouteService {
     private String sendRequest(final TelerouteRequest telerouteRequest, final String accessToken) {
         return webClient.post()
                 .uri(String.format("%s/vehicle/offers", telerouteUrl))
-                .header("Authorization", "Bearer " + accessToken)
-                .header("Content-Type", CONTENT_TYPE)
-                .header("Accept-Version", "v2")
+                .header(AUTHORIZATION, "Bearer " + accessToken)
+                .header(CONTENT_TYPE_HEADER, CONTENT_TYPE)
+                .header(ACCEPT_VERSION_HEADER, DEFAULT_VERSION)
                 .bodyValue(telerouteRequest)
                 .retrieve()
                 .bodyToMono(String.class)
@@ -93,7 +122,7 @@ public class TelerouteService {
         return JsonUtil.fromJson(telerouteResponse, TelerouteResponse.class);
     }
 
-    private TelerouteResponseDto buildResponseDto(final TelerouteResponse telerouteResponse, String errorMessage) {
+    private TelerouteResponseDto buildResponseDto(final TelerouteResponse telerouteResponse, final String errorMessage) {
         final String offerId = Optional.ofNullable(telerouteResponse)
                 .map(TelerouteResponse::content)
                 .map(TelerouteContent::getOfferId)

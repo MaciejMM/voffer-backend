@@ -1,16 +1,32 @@
 package com.example.freight.v1.vehicleOffer.model.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "offer")
 @Entity
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Offer {
 
@@ -31,7 +47,7 @@ public class Offer {
     @Column(name = "timocon_offer_id")
     private String timoconOfferId;
 
-    @Column(name="transeu_offer_id")
+    @Column(name = "transeu_offer_id")
     private String transeuOfferId;
 
     @Column(name = "publish_date_time")
@@ -41,9 +57,13 @@ public class Offer {
     @OneToOne(cascade = CascadeType.ALL)
     private LoadingPlace loadingPlace;
 
-    @JoinColumn(name = "unloading_place", referencedColumnName = "unloading_id")
-    @OneToOne(cascade = CascadeType.ALL)
-    private UnloadingPlace unloadingPlace;
+    @OneToMany(
+            mappedBy = "offer",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true)
+    @JsonManagedReference
+    private List<UnloadingPlace> unloadingPlace = new ArrayList<>();
 
     @Column(name = "description")
     private String description;
@@ -68,5 +88,6 @@ public class Offer {
 
     @Column
     private String publishSelected;
+
 
 }

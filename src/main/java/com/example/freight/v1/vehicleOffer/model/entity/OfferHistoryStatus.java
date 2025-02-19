@@ -4,7 +4,7 @@ public enum OfferHistoryStatus {
 
     CREATED,
     UPDATED,
+    EDITED,
     DELETED
-
 
 }

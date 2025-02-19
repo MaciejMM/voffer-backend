@@ -3,12 +3,12 @@ package com.example.freight.v1.vehicleOffer.model.offer;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 public record VehicleOfferRequest(
         LoadingPlace loadingPlace,
-        UnloadingPlace unloadingPlace,
+        List<UnloadingPlace> unloadingPlace,
         String description,
         @NotNull LoadingType loadingType,
         @NotNull String loadingBodyType,
@@ -23,8 +23,8 @@ public record VehicleOfferRequest(
             @NotNull String country,
             @NotNull String postalCode,
             @NotNull String city,
-            @NotNull LocalDateTime loadingStartDateAndTime,
-            @NotNull LocalDateTime loadingEndDateAndTime
+            @NotNull String loadingStartDateAndTime,
+            @NotNull String loadingEndDateAndTime
     ) {
     }
     @Builder
@@ -32,8 +32,8 @@ public record VehicleOfferRequest(
             @NotNull String country,
             @NotNull String postalCode,
             @NotNull String city,
-            @NotNull LocalDateTime unloadingStartDateAndTime,
-            @NotNull LocalDateTime unloadingEndDateAndTime
+            @NotNull String unloadingStartDateAndTime,
+            @NotNull String unloadingEndDateAndTime
     ) {
     }
 

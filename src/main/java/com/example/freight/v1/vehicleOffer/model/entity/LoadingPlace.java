@@ -28,7 +28,10 @@ public class LoadingPlace {
     @Column(name = "loading_postal_code")
     private String loadingPostalCode;
 
-    @Column(name = "loading_date_and_time")
-    private String loadingDateAndTime;
+    @Column(name = "loading_start_date_and_time")
+    private String loadingStartDateAndTime;
+
+    @Column(name = "loading_end_date_and_time")
+    private String loadingEndDateAndTime;
 
 }

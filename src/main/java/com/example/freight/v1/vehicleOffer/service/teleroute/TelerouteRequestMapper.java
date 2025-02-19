@@ -1,11 +1,19 @@
 package com.example.freight.v1.vehicleOffer.service.teleroute;
 
+import com.example.freight.utlis.DateTimeUtil;
 import com.example.freight.v1.vehicleOffer.model.offer.VehicleOfferRequest;
-import com.example.freight.v1.vehicleOffer.model.teleroute.request.*;
+import com.example.freight.v1.vehicleOffer.model.teleroute.request.Address;
+import com.example.freight.v1.vehicleOffer.model.teleroute.request.Arrival;
+import com.example.freight.v1.vehicleOffer.model.teleroute.request.Departure;
+import com.example.freight.v1.vehicleOffer.model.teleroute.request.Interval;
+import com.example.freight.v1.vehicleOffer.model.teleroute.request.LoadDescription;
+import com.example.freight.v1.vehicleOffer.model.teleroute.request.Location;
+import com.example.freight.v1.vehicleOffer.model.teleroute.request.Owner;
+import com.example.freight.v1.vehicleOffer.model.teleroute.request.TelerouteCountry;
+import com.example.freight.v1.vehicleOffer.model.teleroute.request.TelerouteRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static java.util.Optional.ofNullable;
 
@@ -13,7 +21,7 @@ import static java.util.Optional.ofNullable;
 public class TelerouteRequestMapper {
 
 
-    public TelerouteRequest map(final VehicleOfferRequest vehicleOfferRequest,final String telerouteUser) {
+    public TelerouteRequest map(final VehicleOfferRequest vehicleOfferRequest, final String telerouteUser) {
         return TelerouteRequest
                 .builder()
                 .departure(departureMapper(vehicleOfferRequest.loadingPlace()))
@@ -45,14 +53,16 @@ public class TelerouteRequestMapper {
                 .build();
     }
 
-    private Arrival arrivalMapper(final VehicleOfferRequest.UnloadingPlace unloadingPlace) {
+    private Arrival arrivalMapper(final List<VehicleOfferRequest.UnloadingPlace> unloadingPlace) {
+        VehicleOfferRequest.UnloadingPlace unloadingPlace1 = unloadingPlace.stream().findFirst().orElse(null);
         return Arrival
                 .builder()
                 .location(
-                        mapUnloadingLocation(unloadingPlace)
+                        mapUnloadingLocation(unloadingPlace1)
                 )
-                .interval(mapInterval(unloadingPlace.unloadingStartDateAndTime(), unloadingPlace.unloadingEndDateAndTime()))
+                .interval(mapInterval(unloadingPlace1.unloadingStartDateAndTime(), unloadingPlace1.unloadingEndDateAndTime()))
                 .build();
+
     }
 
     private Location mapUnloadingLocation(final VehicleOfferRequest.UnloadingPlace unloadingPlace) {
@@ -69,15 +79,12 @@ public class TelerouteRequestMapper {
                 .build();
     }
 
-    private Interval mapInterval(final LocalDateTime start, final LocalDateTime end) {
+    private Interval mapInterval(final String start, final String end) {
 
-        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        final String formattedStartDate = start.format(formatter);
-        final String formattedEndDate = end.format(formatter);
         return Interval
                 .builder()
-                .start(formattedStartDate)
-                .end(formattedEndDate)
+                .start(DateTimeUtil.formatDateTime(start))
+                .end(DateTimeUtil.formatDateTime(end))
                 .build();
     }
 
@@ -90,5 +97,6 @@ public class TelerouteRequestMapper {
                 .volume(ofNullable(vehicleOfferRequest.loadingVolume()).map(Double::parseDouble).orElse(null))
                 .build();
     }
+
 
 }

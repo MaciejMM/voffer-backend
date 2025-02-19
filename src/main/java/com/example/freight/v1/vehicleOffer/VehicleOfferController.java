@@ -1,6 +1,8 @@
-package com.example.freight.v1.vehicleOffer.controller;
+package com.example.freight.v1.vehicleOffer;
 
+import com.example.freight.v1.vehicleOffer.model.dto.OfferDto;
 import com.example.freight.v1.vehicleOffer.model.entity.Offer;
+import com.example.freight.v1.vehicleOffer.model.offer.EditOfferRequest;
 import com.example.freight.v1.vehicleOffer.model.offer.VehicleOfferRequest;
 import com.example.freight.v1.vehicleOffer.service.VehicleOfferService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,20 +32,27 @@ public class VehicleOfferController {
     }
 
     @GetMapping
-    public List<Offer> getVehicleOffers() {
+    public List<OfferDto> getVehicleOffers() {
         return vehicleOfferService.getOffers();
     }
 
     @PutMapping(value = "/{id}")
-    public HttpEntity<Map<String, String>> updateVehicleOffer(final @PathVariable String id) {
-        return ResponseEntity.ok().body(Map.of("Message", "Offer updated successfully"));
+    public HttpEntity<Offer> updateVehicleOffer(final @PathVariable Long id,final HttpServletRequest request) {
+        final Offer offer = vehicleOfferService.updateVehicleOffer(id, request);
+        return ResponseEntity.ok().body(offer);
+    }
 
+    @PutMapping()
+    public ResponseEntity<Offer> editVehicleOffer(final @RequestBody EditOfferRequest editOfferRequest,
+                                                  final HttpServletRequest request) {
+        final Offer vehicleOffer = vehicleOfferService.editOffer(editOfferRequest, request);
+        return ResponseEntity.ok().body(vehicleOffer);
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Map<String, String>> deleteVehicleOffer(final @PathVariable Long id,
-                                                                  final @CookieValue("teleroute_access_token") String accessToken) {
-        vehicleOfferService.deleteOffer(id, accessToken);
+                                                                  final HttpServletRequest request) {
+        vehicleOfferService.deleteOffer(id, request);
         return ResponseEntity.ok().body(Map.of("Message", "Offer deleted successfully"));
     }
 }

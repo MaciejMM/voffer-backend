@@ -59,15 +59,13 @@ public class OpenStreetMapService {
 
     private List<CityInfo> mapCityInfo(List<OpenStreetMapResponse> openStreetMapResponse) {
         return openStreetMapResponse.stream()
-                .map(info -> {
-                            return CityInfo
-                                    .builder()
-                                    .city(getCity(info))
-                                    .countryCode(info.address().countryCode().toUpperCase())
-                                    .postalCode(info.address().postcode())
-                                    .displayName(info.displayName())
-                                    .build();
-                        }
+                .map(info -> CityInfo
+                        .builder()
+                        .city(getCity(info))
+                        .countryCode(info.address().countryCode().toUpperCase())
+                        .postalCode(info.address().postcode())
+                        .displayName(info.displayName())
+                        .build()
                 )
                 .collect(Collectors.toList());
     }
@@ -86,11 +84,22 @@ public class OpenStreetMapService {
 
     private String mapCountries(final String country) {
         StringUtils.isNotEmpty(country);
-        if(StringUtils.isNotEmpty(country)){
+        if (StringUtils.isNotEmpty(country)) {
             return country.toUpperCase();
         }
 
-        return StringUtils.join(",", TelerouteCountry.getCountryCodes().stream().map(String::toUpperCase).collect(Collectors.toList()));
+        return StringUtils
+                .join(",",
+                        TelerouteCountry
+                                .getCountryCodes()
+                                .stream()
+                                .map(String::toUpperCase)
+                                .collect(Collectors.toList())
+                )
+                .replace("[", "")
+                .replace("]", "")
+                .replace(" ", "")
+                .replaceFirst(",", "");
     }
 
     @Data

@@ -1,6 +1,7 @@
 package com.example.freight.v1.vehicleOffer.service.teleroute;
 
 import com.example.freight.exception.ServerResponseException;
+import com.example.freight.v1.vehicleOffer.model.teleroute.auth.TelerouteCredentials;
 import com.example.freight.v1.vehicleOffer.model.teleroute.auth.TokenResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,14 +43,14 @@ public class TelerouteTokenServiceTest {
     @Test
     void shouldReturnAccessToken() {
         TokenResponse expectedToken =new TokenResponse("acces__token", "bearer", 3600, "scope","refreshToken");
-
+        TelerouteCredentials tokenCredentials = new TelerouteCredentials("username", "password");
         when(webClient.post()).thenReturn(requestBodyUriSpec);
         when(requestBodyUriSpec.uri(any(String.class))).thenReturn(requestBodySpec);
         when(requestBodySpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.onStatus(any(), any())).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(TokenResponse.class)).thenReturn(Mono.just(expectedToken));
 
-        TokenResponse actualToken = telerouteTokenService.getAccessToken();
+        TokenResponse actualToken = telerouteTokenService.getAccessToken(tokenCredentials);
 
 //        assertEquals(expectedToken, actualToken);
         assertNotNull(actualToken);
@@ -64,7 +65,8 @@ public class TelerouteTokenServiceTest {
             throw new ServerResponseException("Teleroute server is not responding");
         });
         when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.error(new WebClientResponseException(500, "Internal Server Error", null, null, null)));
+        TelerouteCredentials tokenCredentials = new TelerouteCredentials("username", "password");
 
-        assertThrows(ServerResponseException.class, () -> telerouteTokenService.getAccessToken());
+        assertThrows(ServerResponseException.class, () -> telerouteTokenService.getAccessToken(tokenCredentials));
     }
 }

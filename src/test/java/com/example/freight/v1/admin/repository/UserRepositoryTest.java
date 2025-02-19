@@ -29,6 +29,7 @@ class UserRepositoryTest {
     @BeforeEach
     public void setUp() {
         userRepository.deleteAll();
+
     }
 
     Role role = Role.builder().name(ERole.USER).createdAt(LocalDateTime.now()).description("test description").build();
@@ -41,16 +42,12 @@ class UserRepositoryTest {
                     .email("johndoe@email.com")
                     .title("Mr.")
                     .role(role)
-                    .active(true)
-                    .admin(true)
                     .build(),
             User.builder().firstName("jane")
                     .lastName("Zoe")
                     .email("janedoe@email.com")
                     .title("Mrs.")
                     .role(role2)
-                    .active(true)
-                    .admin(true)
                     .build());
 
     @Test
@@ -66,8 +63,6 @@ class UserRepositoryTest {
                 .email("johndoe@email.com")
                 .title("Mr.")
                 .role(role)
-                .active(true)
-                .admin(true)
                 .build();
 
         // when
@@ -85,7 +80,6 @@ class UserRepositoryTest {
 
     @Test
     public void shouldSaveAndReturnTwoUsers() {
-
 
         // given when
         roleRepository.save(role);

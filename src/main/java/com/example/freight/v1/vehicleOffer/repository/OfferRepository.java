@@ -14,5 +14,4 @@ public interface OfferRepository extends JpaRepository<Offer, String> {
 
     Optional<Offer> findOfferByIdAndUserId(Long id, String userId);
 
-    Optional<Offer> deleteOfferByTelerouteExternalId(String telerouteExternalId);
 }

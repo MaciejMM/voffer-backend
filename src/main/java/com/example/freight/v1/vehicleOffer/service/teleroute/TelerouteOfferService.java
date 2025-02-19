@@ -4,7 +4,6 @@ import com.example.freight.utlis.JsonUtil;
 import com.example.freight.v1.vehicleOffer.model.offer.VehicleOfferRequest;
 import com.example.freight.v1.vehicleOffer.model.teleroute.request.TelerouteRequest;
 import com.example.freight.v1.vehicleOffer.model.teleroute.response.TelerouteResponseDto;
-import com.example.freight.v1.vehicleOffer.service.VehicleOfferService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.slf4j.Logger;
@@ -31,6 +30,18 @@ public class TelerouteOfferService {
         final TelerouteRequest map = telerouteRequestMapper.map(vehicleOfferRequest, telerouteToken.getUserName());
         try {
             return telerouteService.createOffer(map, tokenMap.get("teleroute_access_token"));
+        } catch (Exception e) {
+            LOGGER.error("Error creating offer", e);
+            return TelerouteResponseDto.builder().errorMessage(e.getMessage()).offerId(null).externalId(null).publishDateTime(null).build();
+        }
+    }
+
+
+    public TelerouteResponseDto refreshOffer(final VehicleOfferRequest vehicleOfferRequest, final String offerId, Map<String, String> tokenMap) {
+        final TelerouteToken telerouteToken = decodeAccessToken(tokenMap.get("teleroute_access_token"));
+        final TelerouteRequest map = telerouteRequestMapper.map(vehicleOfferRequest, telerouteToken.getUserName());
+        try {
+            return telerouteService.updateOffer(map, offerId, tokenMap.get("teleroute_access_token"));
         } catch (Exception e) {
             LOGGER.error("Error creating offer", e);
             return TelerouteResponseDto.builder().errorMessage(e.getMessage()).offerId(null).externalId(null).publishDateTime(null).build();
