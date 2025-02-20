@@ -4,8 +4,30 @@ import java.util.List;
 
 public record TelerouteResponse(
         TelerouteHeader header,
-        List<String> errors,
-        List<String> warnings,
+        List<TelerouteError> errors,
+        List<TelerouteWarning> warnings,
         TelerouteContent content
 ) {
+
+    public record TelerouteHeader(
+            String statusCode,
+            String timestamp,
+            String login,
+            String request,
+            String version
+    ) {
+    }
+
+    public record TelerouteWarning(
+            String code,
+            String message
+    ) {
+    }
+
+    public record TelerouteError(
+            String code,
+            String message
+    ) {
+    }
+
 }

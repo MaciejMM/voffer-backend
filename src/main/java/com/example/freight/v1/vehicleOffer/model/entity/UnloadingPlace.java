@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,8 +28,8 @@ import lombok.Setter;
 public class UnloadingPlace {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "unloading_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "unloading_place_id_seq")
+    @SequenceGenerator(name = "unloading_place_id_seq", sequenceName = "unloading_place_id_seq", allocationSize = 1)
     private Long unloadingId;
 
     @Column(name = "unloading_country")

@@ -55,6 +55,7 @@ public class VehicleOfferService {
         this.vehicleOfferMapper = vehicleOfferMapper;
     }
 
+    @Transactional
     public Offer createVehicleOffer(final VehicleOfferRequest vehicleOfferRequest, final HttpServletRequest request) {
         LOGGER.info("Creating offer: {}", JsonUtil.toJson(vehicleOfferRequest));
         Map<String, String> tokenMap = tokenServiceMapper.map(request);
@@ -104,6 +105,11 @@ public class VehicleOfferService {
         offerHistoryService.save(offer, OfferHistoryStatus.UPDATED);
         return offerRepository.save(offer);
     }
+
+    public void updateOfferList(final String offers) {
+        LOGGER.info("Updating offer list: {}", offers);
+    }
+
 
     @Transactional
     public Offer editOffer(final EditOfferRequest editOfferRequest, final HttpServletRequest request) {

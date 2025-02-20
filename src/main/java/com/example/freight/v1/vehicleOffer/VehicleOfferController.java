@@ -42,6 +42,7 @@ public class VehicleOfferController {
         return ResponseEntity.ok().body(offer);
     }
 
+
     @PutMapping()
     public ResponseEntity<Offer> editVehicleOffer(final @RequestBody EditOfferRequest editOfferRequest,
                                                   final HttpServletRequest request) {
