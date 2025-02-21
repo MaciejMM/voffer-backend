@@ -1,7 +1,5 @@
-package com.example.freight.v1.admin.repository;
+package com.example.freight.auth;
 
-import com.example.freight.auth.RoleRepository;
-import com.example.freight.auth.UserRepository;
 import com.example.freight.auth.models.entity.ERole;
 import com.example.freight.auth.models.entity.Role;
 import com.example.freight.auth.models.entity.User;

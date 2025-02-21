@@ -1,18 +1,16 @@
 package com.example.freight.v1.vehicleOffer.model.offer;
 
-import lombok.Getter;
 
-@Getter
+import java.util.Arrays;
+
 public enum LoadingType {
     FTL,
     LTL;
 
-    public static LoadingType fromString(String loadingType) {
-        for (LoadingType type : LoadingType.values()) {
-            if (type.name().equalsIgnoreCase(loadingType)) {
-                return type;
-            }
-        }
-        return null;
+    public static LoadingType fromString(final String loadingType) {
+        return Arrays.stream(LoadingType.values())
+                .filter(type -> type.name().equalsIgnoreCase(loadingType))
+                .findFirst()
+                .orElse(null);
     }
 }

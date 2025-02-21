@@ -16,6 +16,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.apache.commons.lang3.StringUtils.*;
+
 @Service
 public class OpenStreetMapService {
 
@@ -79,27 +81,26 @@ public class OpenStreetMapService {
                         info.address().municipality())
                 .filter(StringUtils::isNotEmpty)
                 .findFirst()
-                .orElse("");
+                .orElse(EMPTY);
     }
 
     private String mapCountries(final String country) {
-        StringUtils.isNotEmpty(country);
-        if (StringUtils.isNotEmpty(country)) {
+        isNotEmpty(country);
+        if (isNotEmpty(country)) {
             return country.toUpperCase();
         }
 
-        return StringUtils
-                .join(",",
+        return join(",",
                         TelerouteCountry
                                 .getCountryCodes()
                                 .stream()
                                 .map(String::toUpperCase)
                                 .collect(Collectors.toList())
                 )
-                .replace("[", "")
-                .replace("]", "")
-                .replace(" ", "")
-                .replaceFirst(",", "");
+                .replace("[", EMPTY)
+                .replace("]", EMPTY)
+                .replace(" ", EMPTY)
+                .replaceFirst(",", EMPTY);
     }
 
     @Data

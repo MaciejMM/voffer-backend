@@ -26,8 +26,6 @@ public class KindeUserService {
         this.webClient = webClient;
     }
 
-
-
     public KindeCreateUserResponse createUser(KindeCreateUserRequest request) {
 
         KindeTokenManagementResponse accessToken = getAccessToken();

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final String ROLE_PREFIX = "ROLE_";
+    private static final String AUTHORIZATION_HEADER_KEY = "Authorization";
     private final UserRepository userRepository;
     private final CustomErrorHandler customErrorHandler;
     private final TokenUtils tokenUtils;
@@ -34,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public JwtAuthenticationFilter(
             final UserRepository userRepository,
             final CustomErrorHandler customErrorHandler,
-             TokenUtils tokenUtils) {
+            final TokenUtils tokenUtils) {
         this.userRepository = userRepository;
         this.customErrorHandler = customErrorHandler;
         this.tokenUtils = tokenUtils;
@@ -47,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
+        final String authHeader = request.getHeader(AUTHORIZATION_HEADER_KEY);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);

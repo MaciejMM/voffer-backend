@@ -52,7 +52,6 @@ public class TelerouteTokenServiceTest {
 
         TokenResponse actualToken = telerouteTokenService.getAccessToken(tokenCredentials);
 
-//        assertEquals(expectedToken, actualToken);
         assertNotNull(actualToken);
     }
 
@@ -68,5 +67,19 @@ public class TelerouteTokenServiceTest {
         TelerouteCredentials tokenCredentials = new TelerouteCredentials("username", "password");
 
         assertThrows(ServerResponseException.class, () -> telerouteTokenService.getAccessToken(tokenCredentials));
+    }
+
+    @Test
+    void shouldReturnRefreshToken() {
+        TokenResponse expectedToken = new TokenResponse("access_token", "bearer", 3600, "scope", "refreshToken");
+        when(webClient.post()).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.uri(any(String.class))).thenReturn(requestBodySpec);
+        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.onStatus(any(), any())).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(TokenResponse.class)).thenReturn(Mono.just(expectedToken));
+
+        TokenResponse actualToken = telerouteTokenService.refreshAccessToken("refreshToken");
+
+        assertNotNull(actualToken);
     }
 }

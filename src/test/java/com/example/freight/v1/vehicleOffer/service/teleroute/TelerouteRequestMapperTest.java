@@ -4,8 +4,8 @@ import com.example.freight.v1.vehicleOffer.model.offer.LoadingType;
 import com.example.freight.v1.vehicleOffer.model.offer.VehicleOfferRequest;
 import com.example.freight.v1.vehicleOffer.model.teleroute.request.TelerouteRequest;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
 
@@ -13,11 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
+@ContextConfiguration(classes = {TelerouteRequestMapper.class})
 public class TelerouteRequestMapperTest {
 
-    @InjectMocks
-    private TelerouteRequestMapper telerouteRequestMapper;
+    private final TelerouteRequestMapper telerouteRequestMapper;
 
+    public TelerouteRequestMapperTest() {
+        this.telerouteRequestMapper = new TelerouteRequestMapper();
+    }
 
     @Test
     void shouldMapVehicleOfferRequest() {

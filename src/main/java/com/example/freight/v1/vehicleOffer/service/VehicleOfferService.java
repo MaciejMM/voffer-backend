@@ -113,7 +113,7 @@ public class VehicleOfferService {
 
     @Transactional
     public Offer editOffer(final EditOfferRequest editOfferRequest, final HttpServletRequest request) {
-        LOGGER.info("Edditing offer: {}", editOfferRequest.offerId());
+        LOGGER.info("Editing offer: {}", editOfferRequest.offerId());
         Map<String, String> tokenMap = tokenServiceMapper.map(request);
         final Offer offer = offerRepository.findOfferByIdAndUserId(editOfferRequest.offerId(), getUserId()).orElseThrow(() -> new NotFoundException("Offer not found"));
 

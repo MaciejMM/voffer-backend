@@ -7,6 +7,7 @@ import com.example.freight.v1.vehicleOffer.repository.OfferHistoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+
 @Service
 public class OfferHistoryService {
 
@@ -18,7 +19,7 @@ public class OfferHistoryService {
     }
 
 
-    public void save(final Offer offer,final OfferHistoryStatus offerHistoryStatus) {
+    public void save(final Offer offer, final OfferHistoryStatus offerHistoryStatus) {
 
         final OfferHistory offerHistory = OfferHistory.builder()
                 .userId(offer.getUserId())

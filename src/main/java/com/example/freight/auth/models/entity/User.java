@@ -59,7 +59,6 @@ public class User implements UserDetails {
     @Column(name = "title")
     private String title;
 
-
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
     private LocalDateTime createdAt;

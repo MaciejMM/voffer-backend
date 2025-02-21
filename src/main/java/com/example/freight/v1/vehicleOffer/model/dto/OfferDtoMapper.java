@@ -56,5 +56,4 @@ public class OfferDtoMapper {
             .collect(Collectors.toList());
     }
 
-
 }

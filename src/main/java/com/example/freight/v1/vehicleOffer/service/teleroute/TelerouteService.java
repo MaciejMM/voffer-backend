@@ -74,9 +74,9 @@ public class TelerouteService {
     }
 
 
-    public String sendUpdateOfferRequest(final TelerouteRequest vehicleOfferRequest, final String externaId, final String accessToken) {
+    public String sendUpdateOfferRequest(final TelerouteRequest vehicleOfferRequest, final String externalId, final String accessToken) {
         return webClient.put()
-                .uri(String.format("%s/vehicle/offers/%s", telerouteUrl, externaId))
+                .uri(String.format("%s/vehicle/offers/%s", telerouteUrl, externalId))
                 .header(AUTHORIZATION, "Bearer " + accessToken)
                 .header(ACCEPT_VERSION_HEADER, DEFAULT_VERSION)
                 .header(CONTENT_TYPE_HEADER, CONTENT_TYPE)

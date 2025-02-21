@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/teleroute")
-public class TelerouteController {
+public class TelerouteTokenController {
 
     private static final String SET_COOKIE_KEY = "Set-Cookie";
     private static final String REFRESH_TOKEN = "teleroute_refresh_token";
@@ -21,7 +21,7 @@ public class TelerouteController {
     private static final String DEFAULT_COOKIE_PATH = "/";
     private final TelerouteTokenService telerouteTokenService;
 
-    public TelerouteController(TelerouteTokenService telerouteTokenService) {
+    public TelerouteTokenController(TelerouteTokenService telerouteTokenService) {
         this.telerouteTokenService = telerouteTokenService;
     }
 

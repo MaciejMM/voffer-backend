@@ -8,16 +8,10 @@ import lombok.Data;
 public class LoadingPlaceDto {
 
     private Long loadingId;
-
     private String loadingCountry;
-
     private String loadingCity;
-
     private String loadingPostalCode;
-
     private String loadingStartDateAndTime;
-
     private String loadingEndDateAndTime;
-
     private OfferDto offerId;
 }
