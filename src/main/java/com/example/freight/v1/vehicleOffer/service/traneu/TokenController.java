@@ -1,7 +1,6 @@
-package com.example.freight.v1.vehicleOffer.service.teleroute;
+package com.example.freight.v1.vehicleOffer.service.traneu;
 
-import com.example.freight.v1.vehicleOffer.model.teleroute.auth.TelerouteCredentials;
-import com.example.freight.v1.vehicleOffer.model.teleroute.auth.TokenResponse;
+
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -12,36 +11,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/teleroute")
-public class TelerouteTokenController {
-
+@RequestMapping("api/v1/transeu")
+public class TokenController {
     private static final String SET_COOKIE_KEY = "Set-Cookie";
-    private static final String REFRESH_TOKEN = "teleroute_refresh_token";
-    private static final String ACCESS_TOKEN = "teleroute_access_token";
+    private static final String REFRESH_TOKEN = "transeu_refresh_token";
+    private static final String ACCESS_TOKEN = "transeu_access_token";
     private static final String DEFAULT_COOKIE_PATH = "/";
-    private final TelerouteTokenService telerouteTokenService;
 
-    public TelerouteTokenController(TelerouteTokenService telerouteTokenService) {
-        this.telerouteTokenService = telerouteTokenService;
+    private final TokenService tokenService;
+
+    public TokenController(final TokenService tokenService) {
+        this.tokenService = tokenService;
     }
 
     @PostMapping("/token")
-    public ResponseEntity<Void> getTelerouteToken(final @RequestBody TelerouteCredentials telerouteCredentials, final HttpServletResponse response) {
-        TokenResponse tokenResponse = telerouteTokenService.getAccessToken(telerouteCredentials);
+    public ResponseEntity<Void> getTraneuToken(@RequestBody final TokenRequest code, final HttpServletResponse response) {
+        TokenResponse accessToken = tokenService.getAccessToken(code.code());
 
-        final ResponseCookie accessTokenCookie = responseCookieBuilder(ACCESS_TOKEN, tokenResponse.access_token(), 3600);
-        final ResponseCookie refreshTokenCookie = responseCookieBuilder(REFRESH_TOKEN, tokenResponse.refresh_token(), 604800);
+        final ResponseCookie accessTokenCookie = responseCookieBuilder(ACCESS_TOKEN, accessToken.access_token(), 3600);
+        final ResponseCookie refreshTokenCookie = responseCookieBuilder(REFRESH_TOKEN, accessToken.refresh_token(), 604800);
 
         response.addHeader(SET_COOKIE_KEY, accessTokenCookie.toString());
         response.addHeader(SET_COOKIE_KEY, refreshTokenCookie.toString());
 
         return ResponseEntity.ok().build();
-
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<Void> refreshAccessToken(final @CookieValue("teleroute_refresh_token") String refreshToken, final HttpServletResponse response) {
-        final TokenResponse newTokens = telerouteTokenService.refreshAccessToken(refreshToken);
+    public ResponseEntity<Void> refreshAccessToken(final @CookieValue("transeu_refresh_token") String refreshToken, final HttpServletResponse response) {
+        final TokenResponse newTokens = tokenService.refreshAccessToken(refreshToken);
         final ResponseCookie accessTokenCookie = responseCookieBuilder(ACCESS_TOKEN, newTokens.access_token(), 3600);
 
         response.addHeader(SET_COOKIE_KEY, accessTokenCookie.toString());
@@ -61,4 +59,5 @@ public class TelerouteTokenController {
                 .maxAge(maxAgeSeconds)
                 .build();
     }
+
 }
