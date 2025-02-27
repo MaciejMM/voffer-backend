@@ -37,3 +37,9 @@ kinde:
     client-secret: ${kindeoauth.client_secret}
     scopes: ${kindeoauth.scopes}
     uri: ${kindeoauth.uri}
+
+integrations:
+  transeu:
+    client-id: ${transeu.client_id}
+    client-secret: ${transeu.client_secret}
+    apikey: ${transeu.apikey}

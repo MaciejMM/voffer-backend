@@ -1,14 +1,22 @@
 package com.example.freight.v1.vehicleOffer.model.transeu.request;
 
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class TransEuRequest {
-    private String vehicle_size;
-    private String truck_body;
-    private LoadingPlace loading_place;
-    private UnloadingPlace unloading_places;
+    @SerializedName("vehicle_size")
+    private String vehicleSize;
+    @SerializedName("truck_body")
+    private String truckBody;
+    @SerializedName("loading_place")
+    private LoadingPlace loadingPlace;
+    @SerializedName("unloading_places")
+    private List<UnloadingPlace> unloadingPlaces;
     private Cargo cargo;
-    private AvailableOn available_on;
+    @SerializedName("available_on")
+    private AvailableOn availableOn;
 }

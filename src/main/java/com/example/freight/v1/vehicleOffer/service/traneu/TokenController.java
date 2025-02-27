@@ -25,24 +25,19 @@ public class TokenController {
     }
 
     @PostMapping("/token")
-    public ResponseEntity<Void> getTraneuToken(@RequestBody final TokenRequest code, final HttpServletResponse response) {
+    public ResponseEntity<Void> generateToken(@RequestBody final TokenRequest code, final HttpServletResponse response) {
         TokenResponse accessToken = tokenService.getAccessToken(code.code());
 
-        final ResponseCookie accessTokenCookie = responseCookieBuilder(ACCESS_TOKEN, accessToken.access_token(), 3600);
-        final ResponseCookie refreshTokenCookie = responseCookieBuilder(REFRESH_TOKEN, accessToken.refresh_token(), 604800);
-
-        response.addHeader(SET_COOKIE_KEY, accessTokenCookie.toString());
-        response.addHeader(SET_COOKIE_KEY, refreshTokenCookie.toString());
+        response.addHeader(SET_COOKIE_KEY, responseCookieBuilder(ACCESS_TOKEN, accessToken.access_token(), 3600).toString());
+        response.addHeader(SET_COOKIE_KEY, responseCookieBuilder(REFRESH_TOKEN, accessToken.refresh_token(), 604800).toString());
 
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<Void> refreshAccessToken(final @CookieValue("transeu_refresh_token") String refreshToken, final HttpServletResponse response) {
+    public ResponseEntity<Void> refreshAccessToken(final @CookieValue(REFRESH_TOKEN) String refreshToken, final HttpServletResponse response) {
         final TokenResponse newTokens = tokenService.refreshAccessToken(refreshToken);
-        final ResponseCookie accessTokenCookie = responseCookieBuilder(ACCESS_TOKEN, newTokens.access_token(), 3600);
-
-        response.addHeader(SET_COOKIE_KEY, accessTokenCookie.toString());
+        response.addHeader(SET_COOKIE_KEY, responseCookieBuilder(ACCESS_TOKEN, newTokens.access_token(), 604800).toString());
         return ResponseEntity.ok().build();
     }
 
