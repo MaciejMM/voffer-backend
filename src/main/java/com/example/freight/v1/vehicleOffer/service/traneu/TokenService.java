@@ -3,6 +3,7 @@ package com.example.freight.v1.vehicleOffer.service.traneu;
 
 import com.example.freight.exception.ServerResponseException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,34 +31,34 @@ public class TokenService {
 
     private final WebClient webClient;
 
-    public TokenService(final WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("https://api.platform.trans.eu").build();
+    public TokenService(final WebClient webClient) {
+        this.webClient = webClient;
     }
 
-    public TokenResponse getAccessToken(final String code) {
 
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("grant_type", "authorization_code");
-        formData.add("code", code);
-        formData.add("redirect_uri", "https://voffer-d18ce4ed1b53.herokuapp.com");
-        formData.add("client_id", clientId);
-        formData.add("client_secret", clientSecret);
+    public String getAccessToken(final String code) {
 
-        return webClient.post()
+        String response = webClient.post()
                 .uri("https://api.platform.trans.eu/ext/auth-api/accounts/token")
                 .header("Api-key", apiKey)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .accept(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromFormData(formData))
+                .body(BodyInserters
+                        .fromFormData("grant_type", "authorization_code")
+                        .with("code", code)
+                        .with("redirect_uri", "https://voffer-d18ce4ed1b53.herokuapp.com")
+                        .with("client_id", clientId)
+                        .with("client_secret", clientSecret)
+                )
                 .retrieve()
-                .onStatus(HttpStatusCode::is5xxServerError, clientResponse ->
-                        Mono.error(new ServerResponseException("Trans EU server error is not responding"))
-                )
                 .onStatus(HttpStatusCode::is4xxClientError, clientResponse ->
-                        Mono.error(new ServerResponseException("Authorization Error"))
+                        Mono.error(new RuntimeException("Client Error: " + clientResponse.statusCode()))
                 )
-                .bodyToMono(TokenResponse.class)
+                .onStatus(HttpStatusCode::is5xxServerError, clientResponse ->
+                        Mono.error(new RuntimeException("Server Error: " + clientResponse.statusCode()))
+                )
+                .bodyToMono(String.class)
                 .block();
+        return response;
 
     }
 

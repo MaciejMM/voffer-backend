@@ -6,6 +6,5 @@ public record TokenResponse(
         String token_type,
         int expires_in,
         String scope
-
 ) {
 }
