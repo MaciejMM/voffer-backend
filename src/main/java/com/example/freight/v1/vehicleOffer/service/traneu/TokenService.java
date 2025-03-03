@@ -42,7 +42,7 @@ public class TokenService {
                 .defaultHeader("Api-key", apiKey)
                 .filter(logRequest())
                 .filter(WebClientFilters.logRequest())
-//                .filter(WebClientFilters.logResponse())
+                .filter(WebClientFilters.logResponse())
                 .build();
     }
 
@@ -53,7 +53,6 @@ public class TokenService {
                 grant_type=authorization_code&client_id=%s&client_secret=%s&code=%s&redirect_uri=%s""".formatted(clientId, clientSecret, code, "https://voffer-d18ce4ed1b53.herokuapp.com/");
         LOGGER.info("Form Data Sent: {}", formDataString);
 
-
         try {
             ResponseEntity<String> subscribe = webClient.post()
                     .uri(TRANSEU_TOKEN_ENDPOINT)
@@ -61,20 +60,7 @@ public class TokenService {
                     .exchange()
                     .flatMap(respons -> respons.toEntity(String.class))
                     .block();
-//                    .uri(TRANSEU_TOKEN_ENDPOINT)
-//                    .header("Api-key", apiKey)
-//                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//                    .body(BodyInserters.fromValue(formDataString))
-//                    .retrieve()
-//                    .bodyToMono(String.class)
-//                    .doOnNext(res -> LOGGER.info("Response: {}", res))
-//                    .onErrorResume(e -> {
-//                        LOGGER.error("Error with retreriving access token", e);
-//                            return Mono.empty();
-//                    })
-//                    .subscribe();
-
-
+            LOGGER.info("Subscribed to token response: {}", subscribe.getBody());
             return subscribe.getBody();
         } catch (Exception e) {
             LOGGER.error("Error with retreriving access token", e);
