@@ -31,7 +31,7 @@ public class TokenController {
 //        response.addHeader(SET_COOKIE_KEY, responseCookieBuilder(ACCESS_TOKEN, accessToken.access_token(), 3600).toString());
 //        response.addHeader(SET_COOKIE_KEY, responseCookieBuilder(REFRESH_TOKEN, accessToken.refresh_token(), 604800).toString());
 
-        return ResponseEntity.ok().build();
+         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/refresh-token")

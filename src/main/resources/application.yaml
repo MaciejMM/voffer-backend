@@ -17,7 +17,6 @@ spring:
 server:
   max-http-request-header-size: 10MB
 
-logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n"
 springdoc:
