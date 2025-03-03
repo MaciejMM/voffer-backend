@@ -48,9 +48,9 @@ public class TokenService {
 
 
     public String getAccessToken(final String code) {
-
+        String encodedUrl = URLEncoder.encode("https://voffer-d18ce4ed1b53.herokuapp.com/", StandardCharsets.UTF_8);
         String formDataString = """
-                grant_type=authorization_code&client_id=%s&client_secret=%s&code=%s&redirect_uri=%s""".formatted(clientId, clientSecret, code, "https://voffer-d18ce4ed1b53.herokuapp.com/");
+                grant_type=authorization_code&client_id=%s&client_secret=%s&code=%s&redirect_uri=%s""".formatted(clientId, clientSecret, code, encodedUrl);
         LOGGER.info("Form Data Sent: {}", formDataString);
 
         try {
@@ -67,10 +67,6 @@ public class TokenService {
             return null;
         }
 
-    }
-
-    private static String urlEncode(String value) {
-        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 
     private ExchangeFilterFunction logRequest() {

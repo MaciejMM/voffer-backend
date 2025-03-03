@@ -10,9 +10,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+
 okta:
   oauth2:
     issuer: ${auth0.issuer}
