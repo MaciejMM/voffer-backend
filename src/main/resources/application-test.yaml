@@ -12,6 +12,8 @@ spring:
     show-sql: false
 server:
   max-http-request-header-size: 10MB
+  tomcat:
+    max-http-response-header-size: 32KB
 
 logging:
   pattern:

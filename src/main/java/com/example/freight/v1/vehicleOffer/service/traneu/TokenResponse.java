@@ -5,6 +5,7 @@ public record TokenResponse(
         String refresh_token,
         String token_type,
         int expires_in,
-        String scope
+        String scope,
+        String id_token
 ) {
 }

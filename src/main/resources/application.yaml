@@ -13,7 +13,8 @@ spring:
     open-in-view: false
 server:
   max-http-request-header-size: 10MB
-
+  tomcat:
+    max-http-response-header-size: 32KB
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} - %msg%n"
 springdoc:

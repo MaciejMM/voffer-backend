@@ -26,12 +26,16 @@ public class TokenController {
 
     @PostMapping("/token")
     public ResponseEntity<Void> generateToken(@RequestBody final TokenRequest code, final HttpServletResponse response) {
-        String accessToken = tokenService.getAccessToken(code.code());
+        TokenResponse token = tokenService.getAccessToken(code.code());
 
-        response.addHeader(SET_COOKIE_KEY, responseCookieBuilder(ACCESS_TOKEN, accessToken, 3600).toString());
-        response.addHeader(SET_COOKIE_KEY, responseCookieBuilder(REFRESH_TOKEN, accessToken, 604800).toString());
+        final ResponseCookie accessTokenCookie = responseCookieBuilder(ACCESS_TOKEN, token.access_token(), 3600);
+        final ResponseCookie refreshTokenCookie = responseCookieBuilder(REFRESH_TOKEN, token.refresh_token(), 604800);
 
-         return ResponseEntity.ok().build();
+        response.addHeader(SET_COOKIE_KEY, accessTokenCookie.toString());
+        response.addHeader(SET_COOKIE_KEY, refreshTokenCookie.toString());
+
+
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/refresh-token")
