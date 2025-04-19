@@ -35,36 +35,35 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {UserNotFoundException.class})
     public ResponseEntity<Object> handleUserNotFoundException(final UserNotFoundException userNotFoundException) {
         final HttpStatus notFoundStatus = HttpStatus.NOT_FOUND;
-        ApiException apiException = createApiException(userNotFoundException, notFoundStatus);
+        final ApiException apiException = createApiException(userNotFoundException, notFoundStatus);
         return new ResponseEntity<>(apiException, notFoundStatus);
     }
 
     @ExceptionHandler(value = {NotFoundException.class})
     public ResponseEntity<Object> handleNotFoundException(final NotFoundException notFoundException) {
         final HttpStatus notFoundStatus = HttpStatus.NOT_FOUND;
-        ApiException apiException = createApiException(notFoundException, notFoundStatus);
+        final ApiException apiException = createApiException(notFoundException, notFoundStatus);
         return new ResponseEntity<>(apiException, notFoundStatus);
     }
 
     @ExceptionHandler(value = {ServerResponseException.class})
     public ResponseEntity<Object> handleServerResponseException(final ServerResponseException serverResponseException) {
         final HttpStatus notFoundStatus = HttpStatus.BAD_GATEWAY;
-
-        ApiException apiException = createApiException(serverResponseException, notFoundStatus);
+        final ApiException apiException = createApiException(serverResponseException, notFoundStatus);
         return new ResponseEntity<>(apiException, notFoundStatus);
     }
 
     @ExceptionHandler(value = {RoleNotAllowedException.class})
     public ResponseEntity<Object> handleRoleNotAllowedException(final RoleNotAllowedException roleNotAllowedException) {
         final HttpStatus forbiddenStatus = HttpStatus.FORBIDDEN;
-        ApiException apiException = createApiException(roleNotAllowedException, forbiddenStatus);
+        final ApiException apiException = createApiException(roleNotAllowedException, forbiddenStatus);
         return new ResponseEntity<>(apiException, forbiddenStatus);
     }
 
     @ExceptionHandler(value = {ExpiredJwtException.class})
     public ResponseEntity<Object> handleCustomExpiredJwtException(final ExpiredJwtException exception) {
         final HttpStatus unauthorizedStatus = HttpStatus.UNAUTHORIZED;
-        ApiException apiException = createApiException(exception, unauthorizedStatus);
+        final ApiException apiException = createApiException(exception, unauthorizedStatus);
         return new ResponseEntity<>(apiException, unauthorizedStatus);
     }
 
@@ -73,7 +72,7 @@ public class ApiExceptionHandler {
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException exception) {
         final String message = exception.getBindingResult().getFieldErrors().stream().findFirst().map(DefaultMessageSourceResolvable::getDefaultMessage).orElse("Validation error");
         final HttpStatus unauthorizedStatus = HttpStatus.BAD_REQUEST;
-        ApiException apiException = createApiException(exception, unauthorizedStatus,message);
+        final ApiException apiException = createApiException(exception, unauthorizedStatus,message);
         return new ResponseEntity<>(apiException, unauthorizedStatus);
 
     }

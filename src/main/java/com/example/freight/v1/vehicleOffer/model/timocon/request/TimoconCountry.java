@@ -1,7 +1,6 @@
 package com.example.freight.v1.vehicleOffer.model.timocon.request;
 
-import com.example.freight.v1.vehicleOffer.model.teleroute.request.TelerouteCountry;
-import lombok.Getter;
+import com.example.freight.v1.integrations.offer.teleroute.request.TelerouteCountry;
 
 import java.util.Arrays;
 

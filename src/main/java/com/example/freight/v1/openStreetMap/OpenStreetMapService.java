@@ -1,7 +1,7 @@
 package com.example.freight.v1.openStreetMap;
 
 import com.example.freight.utlis.JsonUtil;
-import com.example.freight.v1.vehicleOffer.model.teleroute.request.TelerouteCountry;
+import com.example.freight.v1.integrations.offer.teleroute.request.TelerouteCountry;
 import com.google.gson.reflect.TypeToken;
 import lombok.Builder;
 import lombok.Data;
@@ -37,6 +37,7 @@ public class OpenStreetMapService {
                         .queryParam("format", "json")
                         .queryParam("countrycodes", mapCountries(locationRequest.country()))
                         .queryParam("addressdetails", "1")
+                        .queryParam("accept-language","en")
                         .build())
                 .header("User-Agent", "YourAppName/1.0")
                 .retrieve()
@@ -67,6 +68,7 @@ public class OpenStreetMapService {
                         .countryCode(info.address().countryCode().toUpperCase())
                         .postalCode(info.address().postcode())
                         .displayName(info.displayName())
+                        .name(info.name())
                         .build()
                 )
                 .collect(Collectors.toList());
@@ -78,6 +80,8 @@ public class OpenStreetMapService {
                         info.address().town(),
                         info.address().village(),
                         info.address().administrative(),
+                        info.address().county(),
+                        info.address().province(),
                         info.address().municipality())
                 .filter(StringUtils::isNotEmpty)
                 .findFirst()
@@ -85,7 +89,6 @@ public class OpenStreetMapService {
     }
 
     private String mapCountries(final String country) {
-        isNotEmpty(country);
         if (isNotEmpty(country)) {
             return country.toUpperCase();
         }
@@ -110,5 +113,6 @@ public class OpenStreetMapService {
         private final String postalCode;
         private final String countryCode;
         private final String displayName;
+        private final String name;
     }
 }

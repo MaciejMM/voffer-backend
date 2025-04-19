@@ -21,7 +21,7 @@ springdoc:
   swagger-ui:
     path: "/swagger-ui.html"
 teleroute:
-  url: https://api.fx.demo.wktransportservices.com
+  url: "https://api.fx.demo.wktransportservices.com"
 
 kinde:
   management:
@@ -41,3 +41,4 @@ integrations:
         client-id: ${transeu.client_id}
         client-secret: ${transeu.client_secret}
         apikey: ${transeu.apikey}
+        url: "https://api.platform.trans.eu"

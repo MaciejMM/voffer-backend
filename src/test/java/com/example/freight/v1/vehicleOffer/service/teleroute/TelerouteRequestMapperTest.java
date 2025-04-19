@@ -1,8 +1,9 @@
 package com.example.freight.v1.vehicleOffer.service.teleroute;
 
+import com.example.freight.v1.integrations.offer.teleroute.TelerouteRequestMapper;
 import com.example.freight.v1.vehicleOffer.model.offer.LoadingType;
 import com.example.freight.v1.vehicleOffer.model.offer.VehicleOfferRequest;
-import com.example.freight.v1.vehicleOffer.model.teleroute.request.TelerouteRequest;
+import com.example.freight.v1.integrations.offer.teleroute.request.TelerouteRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;

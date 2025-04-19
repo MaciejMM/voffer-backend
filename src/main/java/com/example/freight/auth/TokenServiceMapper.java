@@ -14,14 +14,14 @@ import java.util.Optional;
 public class TokenServiceMapper {
 
     private static final String TELEROUTE_ACCESS_TOKEN = "teleroute_access_token";
-    private static final String TELEROUTE_REFRESH_TOKEN = "teleroute_refresh_token";
+    private static final String TRANS_EU_ACCESS_TOKEN = "transeu_access_token";
 
-    public Map<String,String> map(final HttpServletRequest request) {
-
+    public Map<String,String> map(final Map<String, String> headers) {
+        final String telerouteToken = headers.get("teleroute-token");
+        final String transeuToken = headers.get("transeu-access-token");
         Map<String,String> tokenMap = new HashMap<>();
-        final String telerouteAccessToken = getTelerouteAccessToken(request);
-
-        tokenMap.put(TELEROUTE_ACCESS_TOKEN, telerouteAccessToken);
+        tokenMap.put(TELEROUTE_ACCESS_TOKEN, telerouteToken);
+        tokenMap.put(TRANS_EU_ACCESS_TOKEN, transeuToken);
 
         return tokenMap;
     }
@@ -36,6 +36,5 @@ public class TokenServiceMapper {
                 .map(Cookie::getValue)
                 .orElse(null);
     }
-
 
 }

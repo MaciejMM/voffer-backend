@@ -28,6 +28,7 @@ public record OpenStreetMapResponse(
             String administrative,
             String municipality,
             String county,
+            String province,
             @SerializedName("state") String state,
             @SerializedName("ISO3166-2-lvl4") String ISO3166Lvl4,
             String postcode,

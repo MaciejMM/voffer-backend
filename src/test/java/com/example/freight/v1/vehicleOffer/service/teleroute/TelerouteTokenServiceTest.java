@@ -1,8 +1,9 @@
 package com.example.freight.v1.vehicleOffer.service.teleroute;
 
 import com.example.freight.exception.ServerResponseException;
-import com.example.freight.v1.vehicleOffer.model.teleroute.auth.TelerouteCredentials;
-import com.example.freight.v1.vehicleOffer.model.teleroute.auth.TokenResponse;
+import com.example.freight.v1.integrations.offer.teleroute.TelerouteTokenService;
+import com.example.freight.v1.integrations.offer.teleroute.auth.TelerouteCredentials;
+import com.example.freight.v1.integrations.offer.teleroute.auth.TokenResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

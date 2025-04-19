@@ -54,7 +54,9 @@ dependencies {
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-security")
     implementation(group = "com.google.code.gson", name = "gson", version = "2.11.0")
     implementation(group = "com.kinde.spring", name = "kinde-springboot-starter",version="2.0.1")
-
+    implementation(group = "com.fasterxml.jackson.core", name = "jackson-databind")
+    implementation(group = "com.fasterxml.jackson.core", name = "jackson-annotations")
+    implementation(group = "com.fasterxml.jackson.core", name = "jackson-core")
     implementation(
         group = "org.springdoc",
         name = "springdoc-openapi-starter-webmvc-ui",

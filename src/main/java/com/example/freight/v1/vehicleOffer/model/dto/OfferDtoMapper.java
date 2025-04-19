@@ -1,8 +1,8 @@
 package com.example.freight.v1.vehicleOffer.model.dto;
 
-import com.example.freight.v1.vehicleOffer.model.entity.LoadingPlace;
-import com.example.freight.v1.vehicleOffer.model.entity.Offer;
-import com.example.freight.v1.vehicleOffer.model.entity.UnloadingPlace;
+import com.example.freight.v1.integrations.offer.entity.LoadingPlace;
+import com.example.freight.v1.integrations.offer.entity.Offer;
+import com.example.freight.v1.integrations.offer.entity.UnloadingPlace;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
