@@ -30,4 +30,6 @@ public class FreightDto {
     private String createdDate;
     private String updatedDate;
     private String userId;
+    private Boolean isSuccess;
+    private String message;
 }

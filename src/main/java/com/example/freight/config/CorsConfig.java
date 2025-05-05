@@ -18,7 +18,8 @@ public class CorsConfig {
                 "http://localhost:4200",
                 "https://voffer-d18ce4ed1b53.herokuapp.com",
                 "https://voffer-lkkhkbrq52jbt3t.eu.kinde.com",
-                "http://localhost:3000"
+                "http://localhost:3000",
+                "https://voffer-next.vercel.app"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

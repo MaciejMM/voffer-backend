@@ -5,5 +5,4 @@ public enum ERole {
     USER_MANAGER,
     ADMIN,
     SUPER_ADMIN;
-
 }

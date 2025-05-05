@@ -29,7 +29,7 @@ public class FreightMapper {
                 .selectedCategories(new ArrayList<>())
                 .transeuOfferId(transEuResponse.getId())
                 .updatedBy(null)
-                .createdBy(AdminUtil.getUserId())
+                .userId(AdminUtil.getUserId())
                 .build();
 
         freightRequest.selectedVehicles().forEach(v -> {

@@ -61,29 +61,34 @@ public class TranseuFreightService extends BaseService {
                     .header("Accept", HeaderStatic.APPLICATION_JSON_CONTENT_TYPE)
                     .bodyValue(body)
                     .retrieve()
-                    .onStatus(HttpStatusCode::is5xxServerError, clientResponse ->
-                            Mono.error(new ServerResponseException("Invalid request"))
+                    .onStatus(HttpStatusCode::isError, clientResponse -> 
+                        clientResponse.bodyToMono(String.class)
+                            .flatMap(errorBody -> Mono.error(new ServerResponseException(
+                                "API Error: " + clientResponse.statusCode() + " - " + errorBody
+                            )))
                     )
-                    .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> {
-                        System.out.println("5xx error");
-                        return clientResponse.createException();
-                    })
                     .bodyToMono(TransEuResponse.class)
                     .block();
             return TransEuResponse.builder()
                     .publishDateTime(LocalDateTime.now().toString())
                     .id(transEuResponse.getId())
+                    .isSuccess(true)
+                    .message("Offer created successfully")
                     .build();
         }catch (Exception e){
             LOGGER.error("Error creating offer", e);
+            String errorMessage;
+            if (e instanceof ServerResponseException) {
+                errorMessage = e.getMessage();
+            } else {
+                errorMessage = "Internal error occurred: " + e.getMessage();
+            }
             return TransEuResponse.builder()
                     .publishDateTime(LocalDateTime.now().toString())
                     .id(null)
-                    .errorMessage(e.getMessage())
+                    .message(errorMessage)
                     .build();
         }
-
-
     }
 
 

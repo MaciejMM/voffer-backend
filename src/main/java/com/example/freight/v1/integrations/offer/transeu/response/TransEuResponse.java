@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class TransEuResponse {
     private String id;
-    private String errorMessage;
+    private String message;
     private String publishDateTime;
+    private Boolean isSuccess;
 }

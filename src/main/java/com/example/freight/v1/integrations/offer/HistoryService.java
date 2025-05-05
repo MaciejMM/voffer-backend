@@ -37,7 +37,7 @@ public class HistoryService {
     public void save(final Freight freight, final OfferHistoryStatus offerHistoryStatus) {
 
         final OfferHistory offerHistory = OfferHistory.builder()
-                .userId(freight.getCreatedBy())
+                .userId(freight.getUserId())
                 .offerId(freight.getTranseuOfferId())
                 .createdAt(LocalDateTime.now())
                 .status(offerHistoryStatus)

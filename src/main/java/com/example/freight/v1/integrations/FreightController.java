@@ -10,6 +10,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -39,6 +40,12 @@ public class FreightController {
     public HttpEntity<List<FreightDto>> getFreight() {
         final List<FreightDto> freights = freightService.getFreights();
         return ResponseEntity.ok().body(freights);
+    }
+
+    @GetMapping("/{id}")
+    public HttpEntity<FreightDto> getFreightById(@PathVariable Long id) {
+        FreightDto freight = freightService.getFreightById(id);
+        return ResponseEntity.ok().body(freight);
     }
 
 }

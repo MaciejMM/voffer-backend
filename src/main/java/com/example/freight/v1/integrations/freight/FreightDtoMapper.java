@@ -10,6 +10,7 @@ import com.example.freight.v1.integrations.freight.entity.Freight;
 import com.example.freight.v1.integrations.freight.entity.FreightCategory;
 import com.example.freight.v1.integrations.freight.entity.FreightLoadingPlace;
 import com.example.freight.v1.integrations.freight.entity.FreightUnloadingPlace;
+import com.example.freight.v1.integrations.offer.transeu.response.TransEuResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +18,7 @@ import java.util.List;
 @Service
 public class FreightDtoMapper {
 
-
-    public FreightDto map(final Freight freight){
+    public FreightDto map(final Freight freight, TransEuResponse transEuResponse){
         return FreightDto.builder()
                 .id(freight.getId())
                 .weight(freight.getWeight())
@@ -38,8 +38,29 @@ public class FreightDtoMapper {
                 .updatedBy(freight.getUpdatedBy())
                 .createdDate(freight.getPublishDateTime())
                 .updatedDate(null)
+                .isSuccess(transEuResponse.getIsSuccess())
+                .message(transEuResponse.getMessage())
                 .build();
     }
+
+    public FreightDto map(final Freight freight){
+        return FreightDto.builder()
+                .weight(freight.getWeight())
+                .volume(freight.getVolume())
+                .length(freight.getLength())
+                .description(freight.getDescription())
+                .loadingPlace(mapFreightLoadingPlace(freight.getLoadingPlace()))
+                .unloadingPlace(mapFreightUnloadingPlace(freight.getUnloadingPlace()))
+                .selectedCategories(mapFreightCategories(freight.getSelectedCategories()))
+                .selectedVehicles(freight.getSelectedVehicles().stream()
+                        .map(val-> FreightVehicleDto.builder().name(val.getName()).build())
+                        .toList())
+                .isFullTruck(freight.getIsFullTruck())
+                .transeuFreightId(freight.getTranseuOfferId())
+                .build();
+    }
+
+
 
     private List<FreightCategoryDto> mapFreightCategories(final List<FreightCategory> freightCategories) {
         return freightCategories.stream()

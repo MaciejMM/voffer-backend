@@ -1,6 +1,7 @@
 package com.example.freight.v1.integrations.freight;
 
 import com.example.freight.auth.TokenServiceMapper;
+import com.example.freight.utlis.AdminUtil;
 import com.example.freight.utlis.JsonUtil;
 import com.example.freight.v1.BaseService;
 import com.example.freight.v1.integrations.FreightMapper;
@@ -44,7 +45,9 @@ public class FreightService extends BaseService {
 
         historyService.save(map, OfferHistoryStatus.CREATED);
         final Freight save = freightRepository.save(map);
-        return freightDtoMapper.map(save);
+        FreightDto freightResponse = freightDtoMapper.map(save, transEuResponse);
+        LOGGER.info("Freight: {}", JsonUtil.toJson(freightResponse));
+        return freightResponse;
     }
 
     @Transactional
@@ -53,5 +56,14 @@ public class FreightService extends BaseService {
         return freightList.stream()
                 .map(freightDtoMapper::map)
                 .toList();
+    }
+
+    @Transactional
+    public FreightDto getFreightById(Long id) {
+        LOGGER.info("Getting freight by id: {}", id);
+        String userId = AdminUtil.getUserId();
+        final Freight freight = freightRepository.findFreightByUserIdAndId(userId, id)
+                .orElseThrow(() -> new RuntimeException("Freight not found"));
+        return freightDtoMapper.map(freight);
     }
 }
