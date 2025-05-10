@@ -61,6 +61,10 @@ public class UserService {
     public List<User> getUsers() {
         return userRepository.findAll();
     }
+    public User getUser(final Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+    }
 
     public User updateUser(final Long userId, final UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findById(userId)

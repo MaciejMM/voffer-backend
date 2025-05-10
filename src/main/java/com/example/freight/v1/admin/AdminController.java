@@ -27,6 +27,12 @@ public class AdminController {
         return ResponseEntity.ok().body(user);
     }
 
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<User> getUser(final @PathVariable Long id) {
+        final User users = userService.getUser(id);
+        return ResponseEntity.ok().body(users);
+    }
+
 
     @GetMapping(path = "/users")
     public ResponseEntity<List<User>> getUsers() {

@@ -21,6 +21,8 @@ object Versions {
     const val JAVA_JWT = "4.4.0"
     const val AUTH0_CLIENT = "2.5.0"
     const val SWAGGER_VERSION = "2.1.0"
+    const val GSON_VERSION ="2.11.0"
+    const val KINDE_VERSION ="2.0.1"
 }
 
 java {
@@ -52,8 +54,8 @@ dependencies {
     implementation(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.5")
     implementation(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.5")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-security")
-    implementation(group = "com.google.code.gson", name = "gson", version = "2.11.0")
-    implementation(group = "com.kinde.spring", name = "kinde-springboot-starter",version="2.0.1")
+    implementation(group = "com.google.code.gson", name = "gson", version = Versions.GSON_VERSION)
+    implementation(group = "com.kinde.spring", name = "kinde-springboot-starter",version= Versions.KINDE_VERSION)
     implementation(group = "com.fasterxml.jackson.core", name = "jackson-databind")
     implementation(group = "com.fasterxml.jackson.core", name = "jackson-annotations")
     implementation(group = "com.fasterxml.jackson.core", name = "jackson-core")
