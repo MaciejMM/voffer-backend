@@ -45,6 +45,7 @@ public class FreightDtoMapper {
 
     public FreightDto map(final Freight freight){
         return FreightDto.builder()
+                .id(freight.getId())
                 .weight(freight.getWeight())
                 .volume(freight.getVolume())
                 .length(freight.getLength())
